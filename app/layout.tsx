@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+import { frFR } from "@clerk/localizations";
 
 const brocolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -17,8 +25,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${brocolageGrotesque.className}`}>{children}</body>
-    </html>
+    <ClerkProvider localization={frFR}>
+      <html lang="fr">
+        <body className={`${brocolageGrotesque.className}`}>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
