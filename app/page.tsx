@@ -1,7 +1,9 @@
+import { Button } from "@/components/ui/button";
+
 export default async function Home() {
   return (
     <div>
-      <h1>Bōken</h1>
+      <Button>Ajouter un voyage</Button>
     </div>
   );
 }

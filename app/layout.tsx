@@ -28,12 +28,18 @@ export default function RootLayout({
     <ClerkProvider localization={frFR}>
       <html lang="fr">
         <body className={`${brocolageGrotesque.className}`}>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          <div className="flex items-center justify-between">
+            <h1>Bōken</h1>
+
+            <div className="border border-red-500">
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </div>
+          </div>
           {children}
         </body>
       </html>

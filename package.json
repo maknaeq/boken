@@ -12,6 +12,7 @@
     "@auth/supabase-adapter": "^1.7.4",
     "@clerk/localizations": "^3.10.5",
     "@clerk/nextjs": "^6.11.2",
+    "@radix-ui/react-slot": "^1.1.2",
     "@supabase/supabase-js": "^2.48.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
