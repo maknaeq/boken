@@ -13,7 +13,9 @@ export const users = pgTable("users", {
 // Table des voyages
 export const trips = pgTable("trips", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+  userId: uuid("user_id"),
+  // .references(() => users.id, { onDelete: "cascade" })
+  // .notNull(),
   title: text("title").notNull(),
   description: text("description"),
   startDate: timestamp("start_date"),

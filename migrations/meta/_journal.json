@@ -8,6 +8,20 @@
       "when": 1739295202207,
       "tag": "0000_awesome_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1739298560850,
+      "tag": "0001_lovely_kinsey_walden",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1739298773233,
+      "tag": "0002_bored_starfox",
+      "breakpoints": true
     }
   ]
 }
