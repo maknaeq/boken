@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Darumadrop_One } from "next/font/google";
 import "./globals.css";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
-import { frFR } from "@clerk/localizations";
 import { Menu } from "lucide-react";
 
 const brocolageGrotesque = Bricolage_Grotesque({
@@ -31,28 +23,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider localization={frFR}>
-      <html lang="fr">
-        <body className={`${brocolageGrotesque.className}`}>
-          <div className="flex items-center justify-between p-3">
-            <Menu />
-            <div>
-              <h1>Bōken</h1>
-              <span className={darumadropOne.className}>ぼうけん</span>
-            </div>
-
-            <div>
-              <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
-            </div>
+    <html lang="fr">
+      <body className={`${brocolageGrotesque.className}`}>
+        <div className="flex items-center justify-between p-3">
+          <Menu />
+          <div>
+            <h1>Bōken</h1>
+            <span className={darumadropOne.className}>ぼうけん</span>
           </div>
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+        </div>
+        {children}
+      </body>
+    </html>
   );
 }
