@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Bricolage_Grotesque, Darumadrop_One } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const brocolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -30,6 +32,14 @@ export default function RootLayout({
           <div>
             <h1>Bōken</h1>
             <span className={darumadropOne.className}>ぼうけん</span>
+          </div>
+          <div className="space-x-2">
+            <Link href="/login">
+              <Button variant="outline">Connexion</Button>
+            </Link>
+            <Link href="/register">
+              <Button variant="default">Inscription</Button>
+            </Link>
           </div>
         </div>
         {children}
