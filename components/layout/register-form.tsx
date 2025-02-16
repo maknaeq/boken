@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Darumadrop_One } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -25,13 +24,6 @@ import GoogleSVG from "@/public/images/google.svg";
 import { formSchema } from "@/lib/type";
 import { Separator } from "@/components/ui/separator";
 import Splash1 from "@/public/images/register-splash_1.jpg";
-import Splash2 from "@/public/images/register-splash_2.jpg";
-import Splash3 from "@/public/images/register-splash_3.jpg";
-
-const darumadropOne = Darumadrop_One({
-  weight: "400",
-  subsets: ["latin"],
-});
 
 function RegisterForm() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
