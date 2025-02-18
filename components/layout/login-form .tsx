@@ -124,10 +124,20 @@ function LoginForm() {
                       type="button"
                       className="w-full"
                       onClick={async () => {
-                        window.open("https://accounts.google.com/Logout");
+                        // Ouvrir la page de déconnexion dans une nouvelle fenêtre
+                        const googleLogout = window.open(
+                          "https://accounts.google.com/Logout",
+                          "_blank",
+                        );
+
+                        // Attendre un court instant que la déconnexion soit effectuée
                         setTimeout(() => {
+                          // Fermer la fenêtre de déconnexion
+                          googleLogout?.close();
+
+                          // Déclencher la connexion avec sélection de compte
                           signIn("google", {
-                            redirectTo: "/",
+                            callbackUrl: "/",
                             prompt: "select_account",
                           });
                         }, 500);

@@ -3,8 +3,7 @@ import Link from "next/link";
 import { Bricolage_Grotesque, Darumadrop_One } from "next/font/google";
 import "../globals.css";
 import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { auth, signOut } from "@/lib/auth";
+import UserLoginCard from "@/components/user-login-card";
 
 const brocolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -25,37 +24,22 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
   return (
     <html lang="fr">
       <body className={`${brocolageGrotesque.className}`}>
         <div className="flex items-center justify-between p-3">
           <Menu />
 
-          <div>
-            <h1>Bōken</h1>
-            <span className={darumadropOne.className}>ぼうけん</span>
-          </div>
+          <Link href={"/"} className="relative">
+            <h1 className="text-xl font-semibold">Bōken</h1>
+            <span
+              className={`${darumadropOne.className} absolute top-5 text-xs opacity-50`}
+            >
+              ぼうけん
+            </span>
+          </Link>
           <div className="space-x-2">
-            {session ? (
-              <form
-                action={async () => {
-                  "use server";
-                  await signOut();
-                }}
-              >
-                <Button>Déconnexion</Button>
-              </form>
-            ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="outline">Connexion</Button>
-                </Link>
-                <Link href="/signup">
-                  <Button variant="default">Inscription</Button>
-                </Link>
-              </>
-            )}
+            <UserLoginCard />
           </div>
         </div>
         {children}
