@@ -3,7 +3,7 @@
 import { db } from "@/db/drizzle";
 import { users } from "@/db/schema";
 import { signIn } from "@/lib/auth";
-import { schema } from "@/lib/schema";
+import { signupSchema } from "@/lib/schema";
 import { Credentials } from "@/lib/type";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -33,8 +33,8 @@ export async function loginWithCredentials(values: Credentials) {
   }
 }
 
-export async function signUp(data: z.infer<typeof schema>) {
-  const validatedData = schema.parse(data);
+export async function signUp(data: z.infer<typeof signupSchema>) {
+  const validatedData = signupSchema.parse(data);
 
   await db.insert(users).values({
     firstName: validatedData.firstName.toLowerCase(),

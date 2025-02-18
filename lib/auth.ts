@@ -6,7 +6,7 @@ import { db } from "@/db/drizzle";
 import { users } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { schema } from "./schema";
+import { loginSchema } from "@/lib/schema";
 import { v4 as uuid } from "uuid";
 import { encode } from "next-auth/jwt";
 
@@ -26,7 +26,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: {},
       },
       authorize: async (credentials) => {
-        const validatedCredentials = schema.parse(credentials);
+        const validatedCredentials = loginSchema.parse(credentials);
 
         if (!credentials?.email || !credentials?.password) {
           throw new Error("L'email et le mot de passe sont requis");
