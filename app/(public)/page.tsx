@@ -1,12 +1,9 @@
-import { auth } from "@/lib/auth";
+import HomeVideo from "@/components/home-video";
 
-export default async function Home() {
-  const session = await auth();
-  console.log(session);
+export default function Home() {
   return (
     <div>
-      Bienvenue {session?.user?.email}
-      <p>{session ? "Vous êtes connecté" : "Vous n'êtes pas connecté"}</p>
+      <HomeVideo />
     </div>
   );
 }
