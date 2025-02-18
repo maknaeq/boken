@@ -50,3 +50,8 @@ export const formSchema = z
     message: "Les mots de passe ne correspondent pas",
     path: ["confirmPassword"],
   });
+
+export type Credentials = {
+  email: string;
+  password: string;
+};

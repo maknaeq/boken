@@ -20,12 +20,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Eye, EyeOff, Loader2Icon } from "lucide-react";
 import GoogleSVG from "@/public/images/google.svg";
+import GithubSVG from "@/public/images/github.svg";
 
 import { formSchema } from "@/lib/type";
 import { Separator } from "@/components/ui/separator";
 import Splash1 from "@/public/images/register-splash_1.jpg";
 
-function RegisterForm() {
+import { signUp } from "@/app/actions/loginActions";
+import { signIn } from "next-auth/react";
+
+function SignupForm() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
@@ -42,13 +46,11 @@ function RegisterForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(values);
-        console.log(values);
-        form.reset();
-      }, 2000);
-    });
+    try {
+      await signUp(values);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -90,7 +92,7 @@ function RegisterForm() {
               </div> */}
               <div className="space-y-8">
                 <div className="space-y-3">
-                  <div className="mb-5 mt-3">
+                  <div className="mb-5 mt-3 text-center">
                     <h2 className="text-xl font-semibold md:text-3xl">
                       Créer un compte
                     </h2>
@@ -99,26 +101,52 @@ function RegisterForm() {
                       services.
                     </p>
                   </div>
-                  <Button
-                    variant="outline"
-                    type="button"
-                    className="w-full"
-                    onClick={() => {
-                      alert("Connexion avec Google");
-                    }}
-                  >
-                    <Image
-                      src={GoogleSVG}
-                      alt="Google"
-                      width={18}
-                      height={18}
-                    />
-                    Connexion avec Google
-                  </Button>
+                  <div className="space-y-2">
+                    <Button
+                      variant="outline"
+                      type="button"
+                      className="w-full"
+                      onClick={async () => {
+                        window.open("https://accounts.google.com/Logout");
+                        setTimeout(() => {
+                          signIn("google", {
+                            redirectTo: "/",
+                            prompt: "select_account",
+                          });
+                        }, 500);
+                      }}
+                    >
+                      <Image
+                        src={GoogleSVG}
+                        alt="Google"
+                        width={18}
+                        height={18}
+                      />
+                      Connexion avec Google
+                    </Button>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      className="w-full"
+                      onClick={() =>
+                        signIn("github", {
+                          redirectTo: "/",
+                        })
+                      }
+                    >
+                      <Image
+                        src={GithubSVG}
+                        alt="Github"
+                        width={18}
+                        height={18}
+                      />
+                      Connexion avec Github
+                    </Button>
+                  </div>
 
                   <div className="flex items-center gap-4 py-3">
                     <Separator className="flex-1" />
-                    <span className="text-sm text-muted-foreground">ou</span>
+                    <span className="text-sm text-muted-foreground">Ou</span>
                     <Separator className="flex-1" />
                   </div>
 
@@ -201,7 +229,7 @@ function RegisterForm() {
                               }
                               className="absolute right-0 top-0 hover:bg-transparent"
                             >
-                              {isPasswordVisible ? <Eye /> : <EyeOff />}
+                              {!isPasswordVisible ? <Eye /> : <EyeOff />}
                             </Button>
                           </div>
                         </FormControl>
@@ -234,7 +262,7 @@ function RegisterForm() {
                               }
                               className="absolute right-0 top-0 hover:bg-transparent"
                             >
-                              {isConfirmPasswordVisible ? <Eye /> : <EyeOff />}
+                              {!isConfirmPasswordVisible ? <Eye /> : <EyeOff />}
                             </Button>
                           </div>
                         </FormControl>
@@ -274,4 +302,4 @@ function RegisterForm() {
   );
 }
 
-export default RegisterForm;
+export default SignupForm;
