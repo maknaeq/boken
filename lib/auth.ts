@@ -4,11 +4,12 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { db } from "@/db/drizzle";
 import { users } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { loginSchema } from "@/lib/schema";
 import { v4 as uuid } from "uuid";
 import { encode } from "next-auth/jwt";
+import bcrypt from "bcrypt";
 
 const adapter = DrizzleAdapter(db);
 
@@ -35,12 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const user = await db
           .select()
           .from(users)
-          .where(
-            and(
-              eq(users.email, validatedCredentials.email),
-              eq(users.password, validatedCredentials.password),
-            ),
-          );
+          .where(eq(users.email, validatedCredentials.email.toLowerCase()));
 
         if (user.length === 0) {
           return null;
@@ -48,8 +44,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const foundUser = user[0];
 
-        // Compare the provided password with the stored hashed password (Use bcrypt if passwords are hashed)
-        if (foundUser.password !== validatedCredentials.password) {
+        // Vérifier le mot de passe avec bcrypt
+        const passwordMatch = await bcrypt.compare(
+          validatedCredentials.password,
+          foundUser.password as string,
+        );
+
+        if (!passwordMatch) {
           throw new Error("Informations d'identification incorrectes");
         }
 

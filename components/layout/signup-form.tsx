@@ -47,7 +47,13 @@ function SignupForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await signUp(values);
+      const req = await signUp(values);
+      if (req.error) {
+        form.setError("email", {
+          type: "manual",
+          message: req.error,
+        });
+      }
     } catch (error) {
       console.error(error);
     }

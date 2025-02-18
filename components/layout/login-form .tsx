@@ -53,7 +53,7 @@ function LoginForm() {
         password: values.password,
         redirect: false,
       });
-
+      console.log(result);
       if (result?.error) {
         console.error("Erreur d'authentification:", result.error);
         toast({
