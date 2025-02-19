@@ -26,7 +26,7 @@ async function UserLoginCard() {
             <AvatarFallback>{name?.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="mr-3 text-nowrap rounded-xl">
+        <DropdownMenuContent className="text-nowrap rounded-xl" align="end">
           <div className="flex space-x-3 p-2">
             <Avatar>
               <AvatarImage src={user?.image as string} />

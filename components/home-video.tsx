@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Pause, Play } from "lucide-react";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 export default function HomeVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -51,7 +52,7 @@ export default function HomeVideo() {
   };
 
   return (
-    <div className="relative h-[70vh] bg-black">
+    <div className="relative h-[90vh] bg-black">
       <video
         ref={videoRef}
         // src="https://cdn.pixabay.com/video/2025/01/19/253436_large.mp4"
@@ -68,12 +69,17 @@ export default function HomeVideo() {
         <div className="mx-auto flex max-w-[1000px] items-center justify-between pb-4">
           <Badge variant="default">🇻🇳 Vietnam</Badge>
 
-          <Button
-            onClick={handleTogglePlay}
-            className="opacity-50 transition-all ease-out hover:opacity-100"
-          >
-            {isPlaying ? <Play /> : <Pause />}
-          </Button>
+          <div className="flex items-center gap-3">
+            <Separator className="bg-gray-900 opacity-50" />
+            <Button
+              onClick={handleTogglePlay}
+              className="opacity-50 transition-all ease-out hover:opacity-100"
+            >
+              {isPlaying ? <Play /> : <Pause />}
+            </Button>
+            <Separator className="bg-gray-900 opacity-50" />
+          </div>
+          <div className="w-52" />
         </div>
       </div>
     </div>

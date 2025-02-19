@@ -14,6 +14,13 @@ body {
   opacity: 0;
 }
 
+.landing-image {
+  background-image: url("../public/images/landing-image-vietnam.jpg");
+  object-fit: cover;
+  object-position: center;
+  background-position: center;
+}
+
 @layer base {
   :root {
     --background: 48 26% 96%;
