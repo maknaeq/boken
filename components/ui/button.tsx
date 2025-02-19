@@ -18,6 +18,8 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        bento:
+          "min-w-full min-h-full bg-yellow-300/50 hover:bg-yellow-300/40 text-primary transition-all ease-out",
       },
       size: {
         default: "h-10 px-4 py-2",
