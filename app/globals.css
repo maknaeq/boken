@@ -6,6 +6,21 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.fade-in {
+  opacity: 0.7;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+.landing-image {
+  background-image: url("../public/images/landing-image-vietnam.jpg");
+  object-fit: cover;
+  object-position: center;
+  background-position: center;
+}
+
 @layer base {
   :root {
     --background: 48 26% 96%;
