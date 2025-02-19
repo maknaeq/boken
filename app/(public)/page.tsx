@@ -1,6 +1,3 @@
-import HomeVideo from "@/components/home-video";
-import { Button } from "@/components/ui/button";
-
 export default function Home() {
   return (
     <div>
