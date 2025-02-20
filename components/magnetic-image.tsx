@@ -56,6 +56,7 @@ export default function MagneticImage({
       <Image
         src={src}
         alt={alt}
+        placeholder="blur"
         width={500}
         height={320}
         className="h-full w-full object-cover object-center transition-transform duration-500 ease-out"

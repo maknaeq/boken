@@ -72,7 +72,12 @@ function SignupForm() {
               Retour à l&apos;accueil
             </Button>
           </Link>
-          <Image src={Splash1} alt="" fill className="object-cover" />
+          <Image
+            src={Splash1}
+            alt="Vue d'un hublot d'avion"
+            fill
+            className="object-cover"
+          />
         </div>
         <Link
           href="/"
