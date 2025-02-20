@@ -17,7 +17,7 @@ async function UserLoginCard() {
   const session = await auth();
   const user = session?.user;
   const name = user?.name || user?.email;
-  if (session) {
+  if (user) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger className="relative">
