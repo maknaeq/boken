@@ -22,7 +22,7 @@ async function UserLoginCard() {
     return (
       <div className="flex items-center space-x-2">
         {/* This button check the pathname and is disabled depending on protected paths */}
-        <RedirectButton variant={"outline"} href="/trips">
+        <RedirectButton variant={"outline"} href="/dashboard/trips">
           Mes voyages
         </RedirectButton>
 
