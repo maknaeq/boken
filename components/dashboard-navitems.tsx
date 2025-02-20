@@ -9,6 +9,9 @@ import { usePathname } from "next/navigation";
 
 function DashboardNavItems() {
   const pathname = usePathname();
+
+  if (pathname === "/dashboard/trips/create") return null;
+
   return (
     <ul className="flex items-center justify-center gap-2">
       {navitems.map((item) => (
@@ -16,7 +19,10 @@ function DashboardNavItems() {
           <Link href={item.href}>
             <Button
               variant="ghost"
-              className={cn(pathname === item.href && "bg-accent")}
+              className={cn(
+                "hover:bg-yellow-300/40",
+                pathname === item.href && "bg-yellow-300/50",
+              )}
             >
               {item.icon && item.icon}
               {item.name}

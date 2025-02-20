@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -21,7 +22,7 @@ export default function Home() {
         <div className="flex h-full w-full flex-col justify-center space-y-5 text-background md:pl-20">
           <div className="relative mt-10 w-fit p-4">
             <h2 className="relative z-50 mb-3 max-w-[600px] text-7xl font-semibold">
-              Planifier votre voyage solo{" "}
+              Planifier vos voyages solo{" "}
             </h2>
             <span className="absolute w-fit -rotate-3 bg-yellow-300 p-2 text-5xl font-semibold text-foreground">
               sans stress
@@ -72,12 +73,15 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div className="mx-auto flex w-full items-center justify-center space-y-5 rounded-xl md:w-[288px]">
+          <Link
+            href="/dashboard/trips/create"
+            className="mx-auto flex w-full items-center justify-center space-y-5 rounded-xl md:w-[288px]"
+          >
             <Button variant="bento" className="">
               <Plus />
               Créer mon itinéraire
             </Button>
-          </div>
+          </Link>
         </div>
       </div>
       <div className="mx-auto max-w-[1200px] py-24">

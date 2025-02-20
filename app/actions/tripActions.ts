@@ -1,28 +1,32 @@
 "use server";
 import { db } from "@/db/drizzle";
 import { trips } from "@/db/schema";
+import { createTripFormSchema } from "@/lib/type";
+import { z } from "zod";
 
-export async function createTrip(formData: FormData) {
+export async function createTrip(
+  formData: z.infer<typeof createTripFormSchema>,
+  userId: string,
+) {
   try {
     // Récupération des données du formulaire
-    const tripName = formData.get("tripName") as string;
-    const description = formData.get("description") as string;
-    const startDate = formData.get("startDate") as string;
-    const endDate = formData.get("endDate") as string;
+    const title = formData.title;
+    const description = formData.description;
+    const startDate = formData.startDate;
+    const endDate = formData.endDate;
 
     // ID utilisateur hardcodé (Clerk ou autre système d'auth)
-    const userId = "527b0fe4-3242-412d-9ee5-4fac35450d10"; // UUID valide
 
     // Validation des données (éviter les erreurs)
-    if (!tripName || !description || !startDate || !endDate) {
+    if (!title || !description || !startDate || !endDate) {
       throw new Error("Tous les champs sont obligatoires !");
     }
 
     // Insertion dans la base de données
     await db.insert(trips).values({
       userId, // Assure-toi que la colonne `userId` est bien définie en BDD
-      title: tripName,
-      description: description,
+      title,
+      description,
       startDate: new Date(startDate), // Convertir en Date (évite erreurs SQL)
       endDate: new Date(endDate),
     });

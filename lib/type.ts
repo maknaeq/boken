@@ -52,6 +52,37 @@ export const formSchema = z
     path: ["confirmPassword"],
   });
 
+export const createTripFormSchema = z.object({
+  title: z
+    .string()
+    .min(2, {
+      message: "Le titre doit contenir au moins 2 caractères",
+    })
+    .max(50, {
+      message: "Le titre doit contenir au plus 50 caractères",
+    }),
+  description: z.string().max(50, {
+    message: "La description doit contenir au plus 50 caractères",
+  }),
+  startDate: z.date(),
+  endDate: z.date(),
+  price: z.string().regex(/^\d+$/, {
+    message: "Le prix doit être un nombre",
+  }),
+  image: z.string().url(),
+});
+
+export type User = {
+  id: string;
+  name: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  password: string | null;
+  emailVerified: Date | null;
+  image: string | null;
+}[];
+
 export type Credentials = {
   email: string;
   password: string;
