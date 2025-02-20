@@ -12,53 +12,65 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut } from "lucide-react";
+import RedirectButton from "./redirect-button";
 
 async function UserLoginCard() {
   const session = await auth();
   const user = session?.user;
   const name = user?.name || user?.email;
-  if (session) {
+  if (user) {
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger className="relative">
-          <Avatar className="ring-offset-2 transition-all ease-out hover:ring-2">
-            <AvatarImage src={user?.image as string} />
-            <AvatarFallback>{name?.charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="text-nowrap rounded-xl" align="end">
-          <div className="flex space-x-3 p-2">
-            <Avatar>
+      <div className="flex items-center space-x-2">
+        {/* This button check the pathname and is disabled depending on protected paths */}
+        <RedirectButton variant={"outline"} href="/trips">
+          Mes voyages
+        </RedirectButton>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger className="relative">
+            <Avatar className="ring-gray-900 ring-offset-2 transition-all ease-out hover:ring-2">
               <AvatarImage src={user?.image as string} />
-              <AvatarFallback>{name?.charAt(0).toUpperCase()}</AvatarFallback>
+              <AvatarFallback className="bg-yellow-300">
+                {name?.charAt(0).toUpperCase()}
+              </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col">
-              <DropdownMenuLabel className="p-0 font-normal">
-                {user?.name || "First LASTNAME"}
-              </DropdownMenuLabel>
-              <DropdownMenuLabel className="text-nowrap p-0 font-normal text-gray-500">
-                {user?.email}
-              </DropdownMenuLabel>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="text-nowrap rounded-xl" align="end">
+            <div className="flex space-x-3 p-2">
+              <Avatar>
+                <AvatarImage src={user?.image as string} />
+                <AvatarFallback className="bg-yellow-300">
+                  {name?.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <DropdownMenuLabel className="p-0 font-normal">
+                  {user?.name || "First LASTNAME"}
+                </DropdownMenuLabel>
+                <DropdownMenuLabel className="text-nowrap p-0 font-normal text-gray-500">
+                  {user?.email}
+                </DropdownMenuLabel>
+              </div>
             </div>
-          </div>
-          <DropdownMenuSeparator />
-          <div className="text-gray-500">
-            <form
-              action={async () => {
-                "use server";
-                await signOut();
-              }}
-            >
-              <DropdownMenuItem asChild>
-                <button type="submit" className="w-full cursor-pointer">
-                  <LogOut />
-                  Déconnexion
-                </button>
-              </DropdownMenuItem>
-            </form>
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            <DropdownMenuSeparator />
+            <div className="text-gray-500">
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut();
+                }}
+              >
+                <DropdownMenuItem asChild>
+                  <button type="submit" className="w-full cursor-pointer">
+                    <LogOut />
+                    Déconnexion
+                  </button>
+                </DropdownMenuItem>
+              </form>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     );
   }
   return (

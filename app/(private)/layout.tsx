@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Bricolage_Grotesque, Darumadrop_One } from "next/font/google";
 import "@/app/globals.css";
 import UserLoginCard from "@/components/user-login-card";
+import { Separator } from "@/components/ui/separator";
+import DashboardNavItems from "@/components/dashboard-navitems";
 
 const brocolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -42,6 +44,10 @@ export default async function RootLayout({
             </div>
           </div>
         </div>
+        <Separator />
+        <nav className="py-4">
+          <DashboardNavItems />
+        </nav>
         <main className="px-4">{children}</main>
       </body>
     </html>

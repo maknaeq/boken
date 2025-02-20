@@ -82,7 +82,13 @@ function LoginForm() {
               Retour à l&apos;accueil
             </Button>
           </Link>
-          <Image src={Splash2} alt="" fill className="object-cover" />
+          <Image
+            src={Splash2}
+            alt="Lac en asie"
+            placeholder="blur"
+            fill
+            className="object-cover"
+          />
         </div>
         <Link
           href="/"
