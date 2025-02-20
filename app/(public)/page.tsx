@@ -6,6 +6,12 @@ import Spain from "@/public/images/spain-bento.jpg";
 import Japan from "@/public/images/japan-bento.jpg";
 import Mexico from "@/public/images/mexico-bento.jpg";
 import Danemark from "@/public/images/danemark-bento.jpg";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function Home() {
   return (
@@ -115,6 +121,89 @@ export default function Home() {
               description="Copenhague"
             />
           </div>
+        </div>
+      </div>
+      <div className="mx-auto max-w-[calc(288px*2+80px)] py-24">
+        <h3 className="text-5xl font-semibold md:text-center">
+          Questions fréquentes
+        </h3>
+        <p className="mt-6 font-light text-gray-500">
+          Vous avez des questions ? Nous avons les réponses ! Consultez notre
+          FAQ pour en savoir plus sur Bōken.
+        </p>
+        <div className="mt-16">
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Comment fonctionne Bōken ?</AccordionTrigger>
+              <AccordionContent>
+                Bōken vous permet d’organiser facilement votre voyage en
+                ajoutant vos étapes, lieux visités, notes et photos.
+                L’application vous aide à structurer vos aventures et à garder
+                une trace de vos expériences.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>
+                Puis-je utiliser Bōken hors ligne ?
+              </AccordionTrigger>
+              <AccordionContent>
+                Oui ! Une fois vos lieux et notes enregistrés, vous pourrez les
+                consulter même sans connexion internet. Idéal pour les voyageurs
+                dans des zones sans réseau.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-3">
+              <AccordionTrigger>
+                L’application est-elle gratuite ?
+              </AccordionTrigger>
+              <AccordionContent>
+                La version de base de Bōken est gratuite et permet d’ajouter des
+                lieux et notes de voyage. Une version premium pourra proposer
+                des fonctionnalités avancées (stockage illimité, cartes
+                interactives, etc.).
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-4">
+              <AccordionTrigger>
+                Puis-je partager mon itinéraire avec des amis ?
+              </AccordionTrigger>
+              <AccordionContent>
+                Pour l’instant, Bōken est conçu pour une utilisation
+                personnelle, mais une fonctionnalité de partage sera envisagée
+                dans les futures mises à jour.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-5">
+              <AccordionTrigger>
+                Comment ajouter des lieux et activités sur Bōken ?
+              </AccordionTrigger>
+              <AccordionContent>
+                Vous pouvez ajouter manuellement des étapes de voyage,
+                renseigner leur emplacement, écrire des notes et ajouter des
+                photos pour conserver vos souvenirs.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-6">
+              <AccordionTrigger>
+                Bōken me propose-t-il des recommandations de lieux ?
+              </AccordionTrigger>
+              <AccordionContent>
+                Pas encore ! Dans cette première version, c’est vous qui ajoutez
+                vos propres lieux. Mais à terme, Bōken intégrera des suggestions
+                basées sur votre destination et vos préférences.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
     </div>
