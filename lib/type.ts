@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { LinkProps } from "next/link";
 
 export const formSchema = z
   .object({
@@ -54,4 +55,26 @@ export const formSchema = z
 export type Credentials = {
   email: string;
   password: string;
+};
+
+export type RedirectButtonType = {
+  className?: string;
+  variant?:
+    | "link"
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "bento"
+    | null
+    | undefined;
+  href: LinkProps["href"];
+  children?: React.ReactNode;
+};
+
+export type NavItemType = {
+  name: string;
+  href: string;
+  icon?: React.ReactNode;
 };
