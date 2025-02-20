@@ -1,13 +1,27 @@
-import { getAllTrips } from "@/app/actions/tripActions";
+import { getAllUserTrips } from "@/app/actions/tripActions";
 import { FiltersSection } from "@/components/filters-section";
 import { CreateTripCard } from "@/components/create-trip-card";
 import { TripCard } from "@/components/trip-card";
 import RandomImage from "@/public/images/register-splash_3.jpg";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { getCurrentUserByEmail } from "@/app/actions/userActions";
 
 export default async function TripsPage() {
-  const trips = await getAllTrips();
+  const session = await auth();
+
+  if (!session?.user?.email) {
+    redirect("/login");
+  }
+
+  const user = await getCurrentUserByEmail(session.user.email);
+
+  if (!user) {
+    redirect("/login");
+  }
+  const trips = await getAllUserTrips(user[0].id);
 
   return (
     <div className="mx-auto max-w-[1280px]">

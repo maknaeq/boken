@@ -34,7 +34,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         const user = await db
-          .select()
+          .selectDistinct()
           .from(users)
           .where(eq(users.email, validatedCredentials.email.toLowerCase()));
 

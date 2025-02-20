@@ -2,6 +2,7 @@
 import { db } from "@/db/drizzle";
 import { trips } from "@/db/schema";
 import { createTripFormSchema } from "@/lib/type";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 export async function createTrip(
@@ -35,9 +36,12 @@ export async function createTrip(
   }
 }
 
-export async function getAllTrips() {
+export async function getAllUserTrips(userId: string) {
   try {
-    const req = await db.select().from(trips);
+    const req = await db
+      .selectDistinct()
+      .from(trips)
+      .where(eq(trips.userId, userId));
     return req;
   } catch (error: unknown) {
     console.error("Erreur lors de la récupération des voyages", error);
