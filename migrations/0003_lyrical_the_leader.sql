@@ -1,0 +1,1 @@
+ALTER TABLE "trips" ALTER COLUMN "category" SET NOT NULL;

@@ -15,6 +15,8 @@ export async function createTrip(
     const description = formData.description;
     const startDate = formData.startDate;
     const endDate = formData.endDate;
+    const price = formData.price;
+    const category = formData.category;
 
     // ID utilisateur hardcodé (Clerk ou autre système d'auth)
 
@@ -30,6 +32,8 @@ export async function createTrip(
         userId, // Assure-toi que la colonne `userId` est bien définie en BDD
         title,
         description,
+        price: parseInt(price),
+        category,
         startDate: new Date(startDate), // Convertir en Date (évite erreurs SQL)
         endDate: new Date(endDate),
       })

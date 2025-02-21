@@ -5,6 +5,7 @@ import {
   integer,
   boolean,
   primaryKey,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -95,6 +96,14 @@ export const authenticators = pgTable(
   ],
 );
 
+export const tripCategoryEnum = pgEnum("trip_category", [
+  "Backpacking",
+  "Luxe",
+  "Roadtrip",
+  "Digital Nomad",
+  "Normal",
+]);
+
 // Table des voyages
 export const trips = pgTable("trips", {
   id: text("id")
@@ -105,6 +114,8 @@ export const trips = pgTable("trips", {
     .notNull(),
   title: text("title").notNull(),
   description: text("description"),
+  price: integer("price"),
+  category: tripCategoryEnum("category").notNull(),
   startDate: timestamp("start_date"),
   endDate: timestamp("end_date"),
   createdAt: timestamp("created_at").defaultNow().notNull(),

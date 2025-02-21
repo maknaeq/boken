@@ -28,7 +28,7 @@ export default async function TripsPage() {
     <div className="mx-auto max-w-[1280px]">
       <FiltersSection />
 
-      <div className="grid-cols-4 gap-12 space-y-12 md:grid md:space-y-0">
+      <div className="flex grid-cols-4 flex-col gap-8 md:grid md:gap-12">
         <CreateTripCard user={user} />
 
         <TripCard

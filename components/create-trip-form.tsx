@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createTripFormSchema, User } from "@/lib/type";
+import { createTripFormSchema, TripCategory, User } from "@/lib/type";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,15 @@ import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { createTrip } from "@/app/actions/tripActions";
 import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { CATEGORY } from "@/lib/constants";
 
 function CreateTripForm({
   user,
@@ -45,6 +54,7 @@ function CreateTripForm({
       startDate: new Date(),
       endDate: new Date(),
       price: "",
+      category: "Normal",
       image: "",
     },
   });
@@ -83,12 +93,47 @@ function CreateTripForm({
         />
         <FormField
           control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="category">Catégorie</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selectionnez une catégorie" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {(Object.keys(CATEGORY) as TripCategory[]).map(
+                      (category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ),
+                    )}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="description"
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="description">Description</FormLabel>
               <FormControl>
-                <Input {...field} id="description" />
+                <Textarea
+                  placeholder="Tell us a little bit about yourself"
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

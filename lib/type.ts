@@ -61,14 +61,21 @@ export const createTripFormSchema = z.object({
     .max(50, {
       message: "Le titre doit contenir au plus 50 caractères",
     }),
-  description: z.string().max(50, {
-    message: "La description doit contenir au plus 50 caractères",
+  description: z.string().max(500, {
+    message: "La description doit contenir au plus 500 caractères",
   }),
   startDate: z.date(),
   endDate: z.date(),
   price: z.string().regex(/^\d+$/, {
     message: "Le prix doit être un nombre",
   }),
+  category: z.enum([
+    "Backpacking",
+    "Luxe",
+    "Roadtrip",
+    "Digital Nomad",
+    "Normal",
+  ]),
   image: z.string().url(),
 });
 
@@ -109,3 +116,10 @@ export type NavItemType = {
   href: string;
   icon?: React.ReactNode;
 };
+
+export type TripCategory =
+  | "Backpacking"
+  | "Luxe"
+  | "Roadtrip"
+  | "Digital Nomad"
+  | "Normal";

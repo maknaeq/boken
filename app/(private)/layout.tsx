@@ -45,9 +45,7 @@ export default async function RootLayout({
           </div>
         </div>
         <Separator />
-        <nav className="py-4">
-          <DashboardNavItems />
-        </nav>
+        <DashboardNavItems />
         <main className="px-4">{children}</main>
       </body>
     </html>
