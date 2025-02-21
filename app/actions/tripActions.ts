@@ -2,7 +2,7 @@
 import { db } from "@/db/drizzle";
 import { trips } from "@/db/schema";
 import { createTripFormSchema } from "@/lib/type";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 export async function createTrip(
@@ -24,26 +24,44 @@ export async function createTrip(
     }
 
     // Insertion dans la base de données
-    await db.insert(trips).values({
-      userId, // Assure-toi que la colonne `userId` est bien définie en BDD
-      title,
-      description,
-      startDate: new Date(startDate), // Convertir en Date (évite erreurs SQL)
-      endDate: new Date(endDate),
-    });
+    const newTrip = await db
+      .insert(trips)
+      .values({
+        userId, // Assure-toi que la colonne `userId` est bien définie en BDD
+        title,
+        description,
+        startDate: new Date(startDate), // Convertir en Date (évite erreurs SQL)
+        endDate: new Date(endDate),
+      })
+      .returning({ id: trips.id });
+    return { success: true, tripId: newTrip[0].id };
   } catch (error: unknown) {
     console.error("Erreur lors de la création du voyage", error);
   }
 }
 
-export async function getAllUserTrips(userId: string) {
+export async function getAllUserTripsInfos(userId: string) {
   try {
     const req = await db
       .selectDistinct()
       .from(trips)
       .where(eq(trips.userId, userId));
+
     return req;
   } catch (error: unknown) {
     console.error("Erreur lors de la récupération des voyages", error);
+  }
+}
+
+export async function getTripById(tripId: string, userId: string) {
+  try {
+    const req = await db
+      .selectDistinct()
+      .from(trips)
+      .where(and(eq(trips.id, tripId), eq(trips.userId, userId)));
+
+    return req;
+  } catch (error: unknown) {
+    console.error("Erreur lors de la récupération du voyage", error);
   }
 }

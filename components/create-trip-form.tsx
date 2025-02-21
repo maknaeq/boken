@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -27,8 +27,16 @@ import { CalendarIcon, LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { createTrip } from "@/app/actions/tripActions";
+import { useRouter } from "next/navigation";
 
-function CreateTripForm({ user }: { user: User }) {
+function CreateTripForm({
+  user,
+  setIsOpen,
+}: {
+  user: User;
+  setIsOpen?: Dispatch<SetStateAction<boolean>>;
+}) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof createTripFormSchema>>({
     resolver: zodResolver(createTripFormSchema),
     defaultValues: {
@@ -43,9 +51,15 @@ function CreateTripForm({ user }: { user: User }) {
 
   async function onSubmit(values: z.infer<typeof createTripFormSchema>) {
     try {
-      await createTrip(values, user[0].id);
-      console.log("Voyage créé avec succès");
-      form.reset();
+      const result = await createTrip(values, user[0].id);
+
+      if (result?.success && result?.tripId) {
+        form.reset();
+        if (setIsOpen) setIsOpen(false);
+        router.push(`/dashboard/trips/${result.tripId}`);
+      } else {
+        console.error("Erreur lors de la création du voyage");
+      }
     } catch (error: unknown) {
       console.error("Erreur lors de la création du voyage", error);
     }
@@ -184,12 +198,30 @@ function CreateTripForm({ user }: { user: User }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting && (
-            <LoaderCircle className="animate-spin" />
-          )}
-          Créer
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            className="flex-1"
+            type="button"
+            variant="outline"
+            onClick={() => {
+              if (setIsOpen) setIsOpen(false);
+              form.reset();
+            }}
+            disabled={form.formState.isSubmitting}
+          >
+            Annuler
+          </Button>
+          <Button
+            className="flex-1"
+            type="submit"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting && (
+              <LoaderCircle className="animate-spin" />
+            )}
+            Créer
+          </Button>
+        </div>
       </form>
     </Form>
   );

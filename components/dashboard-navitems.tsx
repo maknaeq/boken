@@ -10,6 +10,9 @@ import { usePathname } from "next/navigation";
 function DashboardNavItems() {
   const pathname = usePathname();
 
+  // Vérifie si l'URL contient un ID spécifique (par exemple /dashboard/trips/quelque-chose)
+  if (pathname.match(/^\/dashboard\/trips\/[^/]+$/)) return null;
+
   if (pathname === "/dashboard/trips/create") return null;
 
   return (

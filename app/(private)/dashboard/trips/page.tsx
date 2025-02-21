@@ -1,4 +1,4 @@
-import { getAllUserTrips } from "@/app/actions/tripActions";
+import { getAllUserTripsInfos } from "@/app/actions/tripActions";
 import { FiltersSection } from "@/components/filters-section";
 import { CreateTripCard } from "@/components/create-trip-card";
 import { TripCard } from "@/components/trip-card";
@@ -8,6 +8,7 @@ import { fr } from "date-fns/locale";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getCurrentUserByEmail } from "@/app/actions/userActions";
+import Link from "next/link";
 
 export default async function TripsPage() {
   const session = await auth();
@@ -21,14 +22,14 @@ export default async function TripsPage() {
   if (!user) {
     redirect("/login");
   }
-  const trips = await getAllUserTrips(user[0].id);
+  const trips = await getAllUserTripsInfos(user[0].id);
 
   return (
     <div className="mx-auto max-w-[1280px]">
       <FiltersSection />
 
       <div className="grid-cols-4 gap-12 space-y-12 md:grid md:space-y-0">
-        <CreateTripCard />
+        <CreateTripCard user={user} />
 
         <TripCard
           image={RandomImage}
@@ -40,12 +41,13 @@ export default async function TripsPage() {
           (trip) =>
             trip.startDate &&
             trip.endDate && (
-              <TripCard
-                key={trip.id}
-                image={RandomImage}
-                title={trip.title}
-                dates={`${format(trip.startDate, "PPP", { locale: fr })} - ${format(trip.endDate, "PPP", { locale: fr })}`}
-              />
+              <Link key={trip.id} href={`/dashboard/trips/${trip.id}`}>
+                <TripCard
+                  image={RandomImage}
+                  title={trip.title}
+                  dates={`${format(trip.startDate, "PPP", { locale: fr })} - ${format(trip.endDate, "PPP", { locale: fr })}`}
+                />
+              </Link>
             ),
         )}
       </div>

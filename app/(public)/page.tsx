@@ -74,7 +74,7 @@ export default function Home() {
             </div>
           </div>
           <Link
-            href="/dashboard/trips/create"
+            href="/dashboard/trips?new=true"
             className="mx-auto flex w-full items-center justify-center space-y-5 rounded-xl md:w-[288px]"
           >
             <Button variant="bento" className="">
