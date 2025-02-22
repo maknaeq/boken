@@ -178,7 +178,11 @@ function CreateTripStageForm({
         throw new Error("Coordonnées géographiques hors limites");
       }
 
-      const result = await createTripStage(values, tripId, user[0].id);
+      const result = await createTripStage(
+        values,
+        tripId,
+        user?.[0].id as string,
+      );
 
       if (!result.success) {
         toast({
