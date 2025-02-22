@@ -142,3 +142,21 @@ export type TripCategory =
   | "Roadtrip"
   | "Digital Nomad"
   | "Normal";
+
+export const createPlaceFormSchema = z.object({
+  name: z.string().min(1, "Le nom est requis"),
+  description: z.string().optional(),
+  category: z.enum([
+    "Restaurant",
+    "Musée",
+    "Parc",
+    "Monument",
+    "Shopping",
+    "Autre",
+  ]),
+  location: z.string().min(1, "La localisation est requise"),
+  latitude: z.string().optional(),
+  longitude: z.string().optional(),
+});
+
+export type Place = z.infer<typeof createPlaceFormSchema>;

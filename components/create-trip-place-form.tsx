@@ -1,10 +1,12 @@
+// components/forms/create-place-form.tsx
 "use client";
-import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
-import axios, { AxiosError } from "axios";
+
+import React, { Dispatch, SetStateAction, useState } from "react";
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createTripStageFormSchema, User } from "@/lib/type";
+import { createPlaceFormSchema } from "@/lib/type";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -17,38 +19,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { LoaderCircle, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { createTripStage } from "@/app/actions/tripActions";
-
-// Types améliorés pour l'API OpenCage
-interface OpenCageResult {
-  formatted: string;
-  geometry: {
-    lat: number;
-    lng: number;
-  };
-  components: {
-    country?: string;
-    city?: string;
-    state?: string;
-  };
-}
-
-interface OpenCageResponse {
-  results: OpenCageResult[];
-  status: {
-    code: number;
-    message: string;
-  };
-  rate: {
-    limit: number;
-    remaining: number;
-    reset: number;
-  };
-}
+import { createPlace } from "@/app/actions/placeActions";
 
 interface LocationSuggestion {
   location: string;
@@ -56,44 +38,27 @@ interface LocationSuggestion {
   longitude: string;
 }
 
-// Validation du schéma améliorée
-const extendedTripStageSchema = createTripStageFormSchema.extend({
-  latitude: z.string().refine(
-    (val) => {
-      const num = parseFloat(val);
-      return !isNaN(num) && num >= -90 && num <= 90;
-    },
-    { message: "Latitude invalide (doit être entre -90 et 90)" },
-  ),
-  longitude: z.string().refine(
-    (val) => {
-      const num = parseFloat(val);
-      return !isNaN(num) && num >= -180 && num <= 180;
-    },
-    { message: "Longitude invalide (doit être entre -180 et 180)" },
-  ),
-});
-
-function CreateTripStageForm({
-  user,
-  tripId,
-  setIsOpen,
-}: {
-  user: User;
-  tripId: string;
+interface CreatePlaceFormProps {
+  stageId: string;
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
-}) {
+}
+
+export default function CreatePlaceForm({
+  stageId,
+  setIsOpen,
+}: CreatePlaceFormProps) {
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [lastSearchTime, setLastSearchTime] = useState(0);
   const { toast } = useToast();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof extendedTripStageSchema>>({
-    resolver: zodResolver(extendedTripStageSchema),
+  const form = useForm<z.infer<typeof createPlaceFormSchema>>({
+    resolver: zodResolver(createPlaceFormSchema),
     defaultValues: {
-      title: "",
+      name: "",
       description: "",
+      category: "Autre",
       location: "",
       latitude: "",
       longitude: "",
@@ -119,66 +84,34 @@ function CreateTripStageForm({
     )}&key=${apiKey}&limit=5&no_annotations=1&language=fr`;
 
     try {
-      const { data } = await axios.get<OpenCageResponse>(url);
-
-      if (data.rate.remaining < 20) {
-        toast({
-          title: "Avertissement",
-          description:
-            "Le nombre de recherches disponibles est limité. Veuillez réessayer plus tard.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const newSuggestions = data.results.map(
-        (result): LocationSuggestion => ({
-          location: result.formatted,
-          latitude: result.geometry.lat.toString(),
-          longitude: result.geometry.lng.toString(),
-        }),
-      );
+      const { data } = await axios.get(url);
+      const newSuggestions = data.results.map((result: any) => ({
+        location: result.formatted,
+        latitude: result.geometry.lat.toString(),
+        longitude: result.geometry.lng.toString(),
+      }));
 
       setSuggestions(newSuggestions);
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorMessage =
-          error.response?.status === 402
-            ? "Limite de requêtes atteinte. Veuillez réessayer plus tard."
-            : "Erreur lors de la recherche du lieu. Veuillez réessayer.";
-
-        toast({
-          title: "Erreur",
-          description: errorMessage,
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la recherche du lieu",
+        variant: "destructive",
+      });
       setSuggestions([]);
     } finally {
       setIsSearching(false);
     }
   };
 
-  const debouncedFetch = useCallback(
+  const debouncedFetch = React.useCallback(
     debounce((value: string) => fetchLocations(value), 500),
     [],
   );
 
-  async function onSubmit(values: z.infer<typeof extendedTripStageSchema>) {
+  async function onSubmit(values: z.infer<typeof createPlaceFormSchema>) {
     try {
-      // Validation supplémentaire des coordonnées
-      const lat = parseFloat(values.latitude);
-      const lng = parseFloat(values.longitude);
-
-      if (isNaN(lat) || isNaN(lng)) {
-        throw new Error("Coordonnées géographiques invalides");
-      }
-
-      if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-        throw new Error("Coordonnées géographiques hors limites");
-      }
-
-      const result = await createTripStage(values, tripId, user[0].id);
+      const result = await createPlace(values, stageId);
 
       if (!result.success) {
         toast({
@@ -191,24 +124,19 @@ function CreateTripStageForm({
 
       toast({
         title: "Succès",
-        description: "L'étape a été créée avec succès",
+        description: "Le lieu a été créé avec succès",
       });
 
-      // Fermer le modal/form si nécessaire
       if (setIsOpen) {
         setIsOpen(false);
       }
 
-      // Reset du formulaire
       form.reset();
-
-      // Rafraîchir la page ou la liste des étapes
       router.refresh();
     } catch (error) {
       toast({
         title: "Erreur",
-        description:
-          error instanceof Error ? error.message : "Une erreur est survenue",
+        description: "Une erreur est survenue lors de la création du lieu",
         variant: "destructive",
       });
     }
@@ -219,13 +147,39 @@ function CreateTripStageForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="title"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Titre</FormLabel>
+              <FormLabel>Nom du lieu</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Ex: Tour Eiffel" />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Catégorie</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionnez une catégorie" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Restaurant">Restaurant</SelectItem>
+                  <SelectItem value="Musée">Musée</SelectItem>
+                  <SelectItem value="Parc">Parc</SelectItem>
+                  <SelectItem value="Monument">Monument</SelectItem>
+                  <SelectItem value="Shopping">Shopping</SelectItem>
+                  <SelectItem value="Autre">Autre</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -239,7 +193,7 @@ function CreateTripStageForm({
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Décrivez cette étape de voyage..."
+                  placeholder="Décrivez ce lieu..."
                   className="resize-none"
                   {...field}
                 />
@@ -254,12 +208,12 @@ function CreateTripStageForm({
           name="location"
           render={({ field }) => (
             <FormItem className="relative">
-              <FormLabel>Lieu</FormLabel>
+              <FormLabel>Localisation</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Rechercher une ville/pays/lieu…"
+                    placeholder="Rechercher un lieu..."
                     onChange={(e) => {
                       field.onChange(e);
                       debouncedFetch(e.target.value);
@@ -283,12 +237,8 @@ function CreateTripStageForm({
                         form.setValue("location", place.location, {
                           shouldValidate: true,
                         });
-                        form.setValue("latitude", place.latitude, {
-                          shouldValidate: true,
-                        });
-                        form.setValue("longitude", place.longitude, {
-                          shouldValidate: true,
-                        });
+                        form.setValue("latitude", place.latitude);
+                        form.setValue("longitude", place.longitude);
                         setSuggestions([]);
                       }}
                     >
@@ -301,9 +251,6 @@ function CreateTripStageForm({
             </FormItem>
           )}
         />
-
-        <input type="hidden" {...form.register("latitude")} />
-        <input type="hidden" {...form.register("longitude")} />
 
         <div className="flex items-center gap-2">
           <Button
@@ -334,7 +281,7 @@ function CreateTripStageForm({
   );
 }
 
-function debounce<T extends (...args: string[]) => unknown>(
+function debounce<T extends (...args: string[]) => any>(
   func: T,
   wait: number,
 ): (...args: Parameters<T>) => void {
@@ -344,5 +291,3 @@ function debounce<T extends (...args: string[]) => unknown>(
     timeout = setTimeout(() => func(...args), wait);
   };
 }
-
-export default CreateTripStageForm;

@@ -13,12 +13,7 @@ import { cn } from "@/lib/utils";
 import { CreateTripStage } from "@/components/create-trip-stage";
 import { redirect } from "next/navigation";
 import { getCurrentUserByEmail } from "@/app/actions/userActions";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import StageAccordion from "@/components/stage-accordion";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -133,29 +128,23 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                 </p>
               </div>
             </div>
-            {
-              <div className="py-10">
-                <h3 className="text-xl">Mon itinéraire</h3>
-                <div className="space-y-4">
-                  {tripStages.map((stage, index) => (
-                    <Accordion key={stage.id} type="single" collapsible>
-                      <AccordionItem value={`item-${index + 1}`}>
-                        <AccordionTrigger>
-                          <div className="flex items-center gap-2">
-                            <span className="w-4">{index + 1}.</span>
-                            <h4 className="text-lg">{stage.title}</h4>
-                            <span className="text-gray-500">
-                              ({stage.location})
-                            </span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>{stage.description}</AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  ))}
+            <div className="grid grid-cols-3 gap-32">
+              <div></div>
+              {
+                <div className="col-span-2 py-10">
+                  <h3 className="text-xl">Mon itinéraire</h3>
+                  <div className="space-y-4">
+                    {tripStages.map((stage, index) => (
+                      <StageAccordion
+                        key={stage.id}
+                        stage={stage}
+                        index={index}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            }
+              }
+            </div>
           </div>
         </div>
       )}
