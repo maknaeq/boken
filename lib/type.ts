@@ -79,6 +79,25 @@ export const createTripFormSchema = z.object({
   image: z.string().url(),
 });
 
+export const createTripStageFormSchema = z.object({
+  title: z
+    .string()
+    .min(2, {
+      message: "Le titre doit contenir au moins 2 caractères",
+    })
+    .max(50, {
+      message: "Le titre doit contenir au plus 50 caractères",
+    }),
+  description: z.string().max(500, {
+    message: "La description doit contenir au plus 500 caractères",
+  }),
+  location: z.string().min(2, {
+    message: "La localisation doit contenir au moins 2 caractères",
+  }),
+  latitude: z.string().nullable(),
+  longitude: z.string().nullable(),
+});
+
 export type User = {
   id: string;
   name: string | null;

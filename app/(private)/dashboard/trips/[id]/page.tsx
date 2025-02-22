@@ -1,9 +1,8 @@
-import { getTripById } from "@/app/actions/tripActions";
+import { getTripById, getTripStages } from "@/app/actions/tripActions";
 import { auth } from "@/lib/auth";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import Image from "next/image";
-import React from "react";
 import RandomImage from "@/public/images/register-splash_3.jpg";
 import RandomImage2 from "@/public/images/register-splash_2.jpg";
 import RandomImage3 from "@/public/images/register-splash_1.jpg";
@@ -11,13 +10,35 @@ import { Button } from "@/components/ui/button";
 import { Clock, Heart, Hotel, Share2 } from "lucide-react";
 import { CATEGORY } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { CreateTripStage } from "@/components/create-trip-stage";
+import { redirect } from "next/navigation";
+import { getCurrentUserByEmail } from "@/app/actions/userActions";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
+  const user = session?.user;
+
+  console.log(user);
+
+  if (!user) {
+    redirect("/login");
+  }
+
   const id = (await params).id;
-  const currentTrip = await getTripById(id, session?.user?.id as string);
-  //fetch the images of the current trip
-  console.log(currentTrip);
+  const currentTrip = await getTripById(id, user.id as string);
+  const currentUser = await getCurrentUserByEmail(user.email as string);
+  const tripStages = await getTripStages(id);
+  console.log(tripStages);
+
+  if (!currentTrip || currentTrip.length === 0) {
+    redirect("/dashboard/trips");
+  }
 
   return (
     <div className="mx-auto max-w-[1280px] py-4">
@@ -102,7 +123,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                     <span className="text-sm text-gray-500">Prix</span>
                     <span className="text-xl">{currentTrip[0].price}€</span>
                   </div>
-                  <Button>Ajouter une étape</Button>
+                  <CreateTripStage user={currentUser} tripId={id} />
                 </div>
               </div>
               <div className="col-span-2">
@@ -112,6 +133,29 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                 </p>
               </div>
             </div>
+            {
+              <div className="py-10">
+                <h3 className="text-xl">Mon itinéraire</h3>
+                <div className="space-y-4">
+                  {tripStages.map((stage, index) => (
+                    <Accordion key={stage.id} type="single" collapsible>
+                      <AccordionItem value={`item-${index + 1}`}>
+                        <AccordionTrigger>
+                          <div className="flex items-center gap-2">
+                            <span className="w-4">{index + 1}.</span>
+                            <h4 className="text-lg">{stage.title}</h4>
+                            <span className="text-gray-500">
+                              ({stage.location})
+                            </span>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>{stage.description}</AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  ))}
+                </div>
+              </div>
+            }
           </div>
         </div>
       )}

@@ -61,8 +61,8 @@ export const CATEGORY: Record<TripCategory, JSX.Element> = {
       />
     </svg>
   ),
-  Luxe: <Sparkles />,
-  Roadtrip: <Caravan />,
-  "Digital Nomad": <Laptop />,
+  Luxe: <Sparkles size={18} />,
+  Roadtrip: <Caravan size={18} />,
+  "Digital Nomad": <Laptop size={18} />,
   Normal: <></>,
 };
