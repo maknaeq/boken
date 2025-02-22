@@ -11,6 +11,8 @@ import { ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "@/lib/type";
 import RatingServerComponentWrapper from "./rating-server-component-wrapper";
+import PlaceActions from "@/components/place-actions";
+import { Badge } from "@/components/ui/badge";
 
 type Stage = {
   id: string;
@@ -58,13 +60,19 @@ async function StageAccordion({
                     userId={user?.[0].id as string}
                   />
                   <div>
-                    <h5 className="text-md">{place.name}</h5>
+                    <div className="flex items-center gap-2">
+                      <h5 className="text-md">{place.name}</h5>
+                      <Badge>{place.category}</Badge>
+                    </div>
                     <p className="text-sm text-gray-500">{place.description}</p>
                   </div>
                 </div>
-                <Button size="icon" variant="ghost">
-                  <ImagePlus />
-                </Button>
+                <div>
+                  <Button size="icon" variant="ghost">
+                    <ImagePlus />
+                  </Button>
+                  <PlaceActions place={place} />
+                </div>
               </div>
             ))}
           </div>

@@ -77,6 +77,41 @@ export async function createPlace(
   }
 }
 
+export async function deletePlaceById(placeId: string) {
+  try {
+    await db.delete(places).where(eq(places.id, placeId));
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Erreur lors de la suppression du lieu :", error);
+    return {
+      success: false,
+      error: "Une erreur est survenue lors de la suppression du lieu",
+    };
+  }
+}
+
 export async function getPlacesByStageId(stageId: string) {
   return db.select().from(places).where(eq(places.stageId, stageId));
+}
+
+export async function updatePlaceById(
+  placeId: string,
+  data: { name: string; description?: string; category: string },
+) {
+  try {
+    await db
+      .update(places)
+      .set({
+        name: data.name,
+        description: data.description || null,
+        category: data.category,
+      })
+      .where(eq(places.id, placeId));
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour :", error);
+    return { success: false, error: "Une erreur est survenue" };
+  }
 }

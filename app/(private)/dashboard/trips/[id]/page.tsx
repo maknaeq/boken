@@ -106,7 +106,9 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                     </div>
                     <div className="flex w-fit items-center space-x-2 rounded-lg border px-4 py-2 text-sm">
                       <Hotel size={15} />
-                      <span>9 endroits</span>
+                      {tripStages.length > 0 && (
+                        <span>{tripStages.length} endroits</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -125,10 +127,10 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-32">
-              <div></div>
-              {
-                <div className="col-span-2 py-10">
+            <div className="grid-cols-3 gap-32 md:grid">
+              <div className="hidden md:block"></div>
+              {tripStages.length > 0 && (
+                <div className="py-10 md:col-span-2">
                   <h3 className="text-xl">Mon itinéraire</h3>
                   <div className="space-y-4">
                     {tripStages.map((stage, index) => (
@@ -141,7 +143,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                     ))}
                   </div>
                 </div>
-              }
+              )}
             </div>
           </div>
         </div>
