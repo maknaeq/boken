@@ -85,7 +85,7 @@ export default function PlaceActions({ place }: PlaceActionsProps) {
     defaultValues: {
       name: place.name,
       description: place.description || "",
-      category: place.category,
+      category: place.category || "",
     },
   });
 
@@ -153,7 +153,7 @@ export default function PlaceActions({ place }: PlaceActionsProps) {
       form.reset({
         name: place.name,
         description: place.description || "",
-        category: place.category,
+        category: place.category || "",
       });
     }
   }, [isDialogOpen, form, place]);
