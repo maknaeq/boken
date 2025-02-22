@@ -9,7 +9,8 @@ import CreatePlace from "@/components/create-place";
 import { getPlacesByStageId } from "@/app/actions/placeActions";
 import { ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import StarRating from "./start-rating";
+import { User } from "@/lib/type";
+import RatingServerComponentWrapper from "./rating-server-component-wrapper";
 
 type Stage = {
   id: string;
@@ -25,9 +26,11 @@ type Stage = {
 async function StageAccordion({
   stage,
   index,
+  user,
 }: {
   stage: Stage;
   index: number;
+  user: User;
 }) {
   const places = await getPlacesByStageId(stage.id);
   return (
@@ -42,10 +45,7 @@ async function StageAccordion({
         </AccordionTrigger>
         <AccordionContent className="space-y-4">
           <p>{stage.description}</p>
-          <CreatePlace
-            // user={user}
-            stageId={stage.id}
-          />
+          <CreatePlace user={user} stageId={stage.id} />
           <div className="space-y-10 py-6">
             {places.length > 0 && (
               <h4 className="text-lg font-semibold">Lieux</h4>
@@ -53,7 +53,10 @@ async function StageAccordion({
             {places.map((place) => (
               <div key={place.id} className="flex items-start justify-between">
                 <div className="space-y-2">
-                  <StarRating rating={0} />
+                  <RatingServerComponentWrapper
+                    placeId={place.id}
+                    userId={user?.[0].id as string}
+                  />
                   <div>
                     <h5 className="text-md">{place.name}</h5>
                     <p className="text-sm text-gray-500">{place.description}</p>

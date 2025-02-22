@@ -15,7 +15,6 @@ function RedirectButton({
 }: RedirectButtonType) {
   //TODO: refactor to use it better
   const pathname = usePathname();
-  console.log(pathname);
   if (privatePaths.some((path) => pathname.includes(path))) {
     return null;
   }

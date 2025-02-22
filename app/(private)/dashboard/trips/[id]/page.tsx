@@ -19,8 +19,6 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   const user = session?.user;
 
-  console.log(user);
-
   if (!user) {
     redirect("/login");
   }
@@ -29,7 +27,6 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   const currentTrip = await getTripById(id, user.id as string);
   const currentUser = await getCurrentUserByEmail(user.email as string);
   const tripStages = await getTripStages(id);
-  console.log(tripStages);
 
   if (!currentTrip || currentTrip.length === 0) {
     redirect("/dashboard/trips");
@@ -139,6 +136,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                         key={stage.id}
                         stage={stage}
                         index={index}
+                        user={currentUser}
                       />
                     ))}
                   </div>

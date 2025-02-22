@@ -2,19 +2,16 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-// import { User } from "@/lib/type";
 import { useState } from "react";
 import CreateTripPlaceForm from "@/components/create-trip-place-form";
+import { User } from "@/lib/type";
 
 interface CreateTripStageProps {
-  // user: User | undefined;
+  user: User;
   stageId: string;
 }
 
-export default function CreatePlace({
-  // user,
-  stageId,
-}: CreateTripStageProps) {
+export default function CreatePlace({ user, stageId }: CreateTripStageProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   // if (!user) return null;
@@ -34,7 +31,7 @@ export default function CreatePlace({
           <DialogTitle>Ajouter un lieu</DialogTitle>
           <CreateTripPlaceForm
             stageId={stageId}
-            // user={user}
+            user={user}
             setIsOpen={setIsOpen}
           />
         </DialogContent>

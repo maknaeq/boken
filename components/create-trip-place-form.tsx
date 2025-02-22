@@ -6,7 +6,7 @@ import axios, { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createPlaceFormSchema } from "@/lib/type";
+import { createPlaceFormSchema, User } from "@/lib/type";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,6 @@ interface LocationSuggestion {
   latitude: string;
   longitude: string;
 }
-
 interface OpenCageResult {
   formatted: string;
   geometry: {
@@ -65,11 +64,13 @@ interface OpenCageResponse {
 }
 
 interface CreatePlaceFormProps {
+  user: User;
   stageId: string;
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function CreatePlaceForm({
+  user,
   stageId,
   setIsOpen,
 }: CreatePlaceFormProps) {
@@ -157,7 +158,7 @@ export default function CreatePlaceForm({
 
   async function onSubmit(values: z.infer<typeof createPlaceFormSchema>) {
     try {
-      const result = await createPlace(values, stageId);
+      const result = await createPlace(values, stageId, user?.[0].id);
 
       if (!result.success) {
         toast({

@@ -6,6 +6,7 @@ import { places, tripStages } from "@/db/schema";
 import { createPlaceFormSchema } from "@/lib/type";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { createRatingPlaceById } from "@/app/actions/reviewActions";
 
 export type CreatePlaceResponse = {
   success: boolean;
@@ -16,6 +17,7 @@ export type CreatePlaceResponse = {
 export async function createPlace(
   formData: z.infer<typeof createPlaceFormSchema>,
   stageId: string,
+  userId?: string,
 ): Promise<CreatePlaceResponse> {
   try {
     const validatedData = createPlaceFormSchema.parse(formData);
@@ -47,6 +49,10 @@ export async function createPlace(
       .returning({
         id: places.id,
       });
+
+    if (userId) {
+      await createRatingPlaceById(userId, newPlace.id, 0);
+    }
 
     return {
       success: true,
