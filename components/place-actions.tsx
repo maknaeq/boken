@@ -57,9 +57,13 @@ interface PlaceFormData {
 interface PlaceActionsProps {
   place: {
     id: string;
+    stageId: string | null;
     name: string;
-    description?: string;
-    category: string;
+    description: string | null;
+    category: string | null;
+    latitude: string | null;
+    longitude: string | null;
+    createdAt: Date;
   };
 }
 
