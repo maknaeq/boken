@@ -2,7 +2,7 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -36,6 +36,32 @@ interface LocationSuggestion {
   location: string;
   latitude: string;
   longitude: string;
+}
+
+interface OpenCageResult {
+  formatted: string;
+  geometry: {
+    lat: number;
+    lng: number;
+  };
+  components: {
+    country?: string;
+    city?: string;
+    state?: string;
+  };
+}
+
+interface OpenCageResponse {
+  results: OpenCageResult[];
+  status: {
+    code: number;
+    message: string;
+  };
+  rate: {
+    limit: number;
+    remaining: number;
+    reset: number;
+  };
 }
 
 interface CreatePlaceFormProps {
@@ -84,20 +110,40 @@ export default function CreatePlaceForm({
     )}&key=${apiKey}&limit=5&no_annotations=1&language=fr`;
 
     try {
-      const { data } = await axios.get(url);
-      const newSuggestions = data.results.map((result: any) => ({
-        location: result.formatted,
-        latitude: result.geometry.lat.toString(),
-        longitude: result.geometry.lng.toString(),
-      }));
+      const { data } = await axios.get<OpenCageResponse>(url);
+
+      if (data.rate.remaining < 20) {
+        toast({
+          title: "Avertissement",
+          description:
+            "Le nombre de recherches disponibles est limité. Veuillez réessayer plus tard.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const newSuggestions = data.results.map(
+        (result): LocationSuggestion => ({
+          location: result.formatted,
+          latitude: result.geometry.lat.toString(),
+          longitude: result.geometry.lng.toString(),
+        }),
+      );
 
       setSuggestions(newSuggestions);
     } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Erreur lors de la recherche du lieu",
-        variant: "destructive",
-      });
+      if (error instanceof AxiosError) {
+        const errorMessage =
+          error.response?.status === 402
+            ? "Limite de requêtes atteinte. Veuillez réessayer plus tard."
+            : "Erreur lors de la recherche du lieu. Veuillez réessayer.";
+
+        toast({
+          title: "Erreur",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
       setSuggestions([]);
     } finally {
       setIsSearching(false);
@@ -136,7 +182,9 @@ export default function CreatePlaceForm({
     } catch (error) {
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de la création du lieu",
+        description:
+          "Une erreur est survenue lors de la création du lieu" +
+          JSON.stringify(error),
         variant: "destructive",
       });
     }
@@ -281,7 +329,7 @@ export default function CreatePlaceForm({
   );
 }
 
-function debounce<T extends (...args: string[]) => any>(
+function debounce<T extends (...args: string[]) => unknown>(
   func: T,
   wait: number,
 ): (...args: Parameters<T>) => void {
