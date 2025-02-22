@@ -61,7 +61,7 @@ function CreateTripForm({
 
   async function onSubmit(values: z.infer<typeof createTripFormSchema>) {
     try {
-      const result = await createTrip(values, user[0].id);
+      const result = await createTrip(values, user?.[0].id as string);
 
       if (result?.success && result?.tripId) {
         form.reset();
