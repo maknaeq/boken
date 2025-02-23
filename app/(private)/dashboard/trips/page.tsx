@@ -2,7 +2,6 @@ import { getAllUserTripsInfos } from "@/app/actions/tripActions";
 import { FiltersSection } from "@/components/filters-section";
 import { CreateTripCard } from "@/components/create-trip-card";
 import { TripCard } from "@/components/trip-card";
-import RandomImage from "@/public/images/register-splash_3.jpg";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { auth } from "@/lib/auth";
@@ -39,7 +38,7 @@ export default async function TripsPage() {
             trip.endDate && (
               <Link key={trip.id} href={`/dashboard/trips/${trip.id}`}>
                 <TripCard
-                  image={RandomImage}
+                  image={trip.imageCover}
                   title={trip.title}
                   dates={`${format(trip.startDate, "PPP", { locale: fr })} - ${format(trip.endDate, "PPP", { locale: fr })}`}
                 />

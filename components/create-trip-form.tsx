@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,7 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, LoaderCircle } from "lucide-react";
+import { CalendarIcon, LoaderCircle, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { createTrip } from "@/app/actions/tripActions";
@@ -37,6 +37,16 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { TRIP_CATEGORIES } from "@/lib/constants";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Image from "next/image";
+
+const UNSPLASH_ACCESS_KEY = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY!;
 
 function CreateTripForm({
   user,
@@ -46,22 +56,58 @@ function CreateTripForm({
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
 }) {
   const router = useRouter();
+  const [unsplashImages, setUnsplashImages] = useState<
+    Array<{
+      id: string;
+      urls: { regular: string; thumb: string };
+      alt_description: string;
+    }>
+  >([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof createTripFormSchema>>({
     resolver: zodResolver(createTripFormSchema),
     defaultValues: {
       title: "",
       description: "",
-      startDate: new Date(),
-      endDate: new Date(),
+      dateRange: {
+        from: new Date(),
+        to: new Date(),
+      },
       price: "",
       category: "Normal",
       image: "",
     },
   });
 
+  const searchUnsplashImages = async (query: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://api.unsplash.com/search/photos?query=${query}&per_page=20`,
+        {
+          headers: {
+            Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
+          },
+        },
+      );
+      const data = await response.json();
+      setUnsplashImages(data.results);
+    } catch (error) {
+      console.error("Erreur lors de la recherche d'images:", error);
+    }
+    setIsLoading(false);
+  };
+
   async function onSubmit(values: z.infer<typeof createTripFormSchema>) {
     try {
-      const result = await createTrip(values, user?.[0].id as string);
+      const tripData = {
+        ...values,
+        startDate: values.dateRange.from,
+        endDate: values.dateRange.to,
+      };
+      const result = await createTrip(tripData, user?.[0].id as string);
 
       if (result?.success && result?.tripId) {
         form.reset();
@@ -77,7 +123,7 @@ function CreateTripForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="title"
@@ -141,75 +187,47 @@ function CreateTripForm({
         />
         <FormField
           control={form.control}
-          name="startDate"
+          name="dateRange"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date de début</FormLabel>
+              <FormLabel>Dates du voyage</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP", { locale: fr })
+                  <Button
+                    id="date"
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !field.value && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {field.value?.from ? (
+                      field.value.to ? (
+                        <>
+                          {format(field.value.from, "dd/MM/yyyy", {
+                            locale: fr,
+                          })}{" "}
+                          -{" "}
+                          {format(field.value.to, "dd/MM/yyyy", { locale: fr })}
+                        </>
                       ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
+                        format(field.value.from, "dd/MM/yyyy", { locale: fr })
+                      )
+                    ) : (
+                      <span>Sélectionnez les dates</span>
+                    )}
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
-                    mode="single"
+                    initialFocus
+                    mode="range"
+                    defaultMonth={field.value?.from}
                     selected={field.value}
                     onSelect={field.onChange}
+                    numberOfMonths={2}
                     disabled={(date) => date < new Date("1900-01-01")}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="endDate"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date de fin</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP", { locale: fr })
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) => date < new Date("1900-01-01")}
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
@@ -235,9 +253,100 @@ function CreateTripForm({
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="image">Image de couverture</FormLabel>
+              <FormLabel>Image de couverture</FormLabel>
               <FormControl>
-                <Input type="file" {...field} id="image" />
+                <div className="space-y-4">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        type="button"
+                        className="w-full"
+                      >
+                        {field.value
+                          ? "Changer l'image"
+                          : "Sélectionner une image"}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-h-[80vh] max-w-3xl overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Sélectionner une image</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Rechercher des images..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                searchUnsplashImages(searchQuery);
+                              }
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            onClick={() => searchUnsplashImages(searchQuery)}
+                          >
+                            <Search className="h-4 w-4" />
+                          </Button>
+                        </div>
+
+                        {isLoading ? (
+                          <div className="flex justify-center">
+                            <LoaderCircle className="h-8 w-8 animate-spin" />
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                            {unsplashImages.map((image) => (
+                              <div
+                                key={image.id}
+                                className={cn(
+                                  "relative aspect-video cursor-pointer overflow-hidden rounded-lg",
+                                  field.value === image.urls.regular &&
+                                    "ring-2 ring-primary",
+                                )}
+                                onClick={() => {
+                                  field.onChange(image.urls.regular);
+                                }}
+                              >
+                                <Image
+                                  src={image.urls.thumb}
+                                  alt={image.alt_description}
+                                  className="object-cover transition-opacity hover:opacity-75"
+                                  fill // Ajout de fill
+                                  sizes="(max-width: 768px) 50vw, 33vw" // Optimisation du chargement
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                  {field.value && (
+                    <div className="relative aspect-video overflow-hidden rounded-lg">
+                      <Image
+                        src={field.value}
+                        alt="Image sélectionnée"
+                        className="object-cover"
+                        fill // Ajout de fill
+                        sizes="100vw" // L'image prend toute la largeur
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute right-2 top-2 z-10" // Ajout de z-10 pour s'assurer que le bouton est au-dessus
+                        onClick={() => field.onChange("")}
+                      >
+                        Supprimer
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

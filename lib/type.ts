@@ -76,22 +76,13 @@ export const updateTripFormSchema = z.object({
   ]),
 });
 export const createTripFormSchema = z.object({
-  title: z
-    .string()
-    .min(2, {
-      message: "Le titre doit contenir au moins 2 caractères",
-    })
-    .max(50, {
-      message: "Le titre doit contenir au plus 50 caractères",
-    }),
-  description: z.string().max(500, {
-    message: "La description doit contenir au plus 500 caractères",
+  title: z.string().min(1, "Le titre est requis"),
+  description: z.string(),
+  dateRange: z.object({
+    from: z.date(),
+    to: z.date(),
   }),
-  startDate: z.date(),
-  endDate: z.date(),
-  price: z.string().regex(/^\d+$/, {
-    message: "Le prix doit être un nombre",
-  }),
+  price: z.string(),
   category: z.enum([
     "Backpacking",
     "Luxe",
@@ -99,7 +90,7 @@ export const createTripFormSchema = z.object({
     "Digital Nomad",
     "Normal",
   ]),
-  image: z.string().url(),
+  image: z.string().min(1, "Une image est requise"),
 });
 
 export const createTripStageFormSchema = z.object({

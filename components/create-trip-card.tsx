@@ -31,7 +31,7 @@ export function CreateTripCard({ user }: { user: User }) {
             </Button>
           </div>
         </div>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
           <DialogTitle>Créer un voyage</DialogTitle>
           <CreateTripForm user={user} setIsOpen={setIsOpen} />
         </DialogContent>

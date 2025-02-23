@@ -116,6 +116,7 @@ export const trips = pgTable("trips", {
   description: text("description"),
   price: integer("price"),
   category: tripCategoryEnum("category").notNull(),
+  imageCover: text("image_cover"),
   startDate: timestamp("start_date"),
   endDate: timestamp("end_date"),
   createdAt: timestamp("created_at").defaultNow().notNull(),

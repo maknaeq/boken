@@ -17,10 +17,11 @@ export async function createTrip(
     // Récupération des données du formulaire
     const title = formData.title;
     const description = formData.description;
-    const startDate = formData.startDate;
-    const endDate = formData.endDate;
+    const startDate = formData.dateRange.from;
+    const endDate = formData.dateRange.to;
     const price = formData.price;
     const category = formData.category;
+    const imageCover = formData.image;
 
     // ID utilisateur hardcodé (Clerk ou autre système d'auth)
 
@@ -38,6 +39,7 @@ export async function createTrip(
         description,
         price: parseInt(price),
         category,
+        imageCover,
         startDate: new Date(startDate), // Convertir en Date (évite erreurs SQL)
         endDate: new Date(endDate),
       })
