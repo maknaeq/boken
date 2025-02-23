@@ -7,13 +7,14 @@ import RandomImage from "@/public/images/register-splash_3.jpg";
 import RandomImage2 from "@/public/images/register-splash_2.jpg";
 import RandomImage3 from "@/public/images/register-splash_1.jpg";
 import { Button } from "@/components/ui/button";
-import { Clock, Heart, Hotel, Share2 } from "lucide-react";
+import { Clock, EllipsisVertical, Heart, Hotel, Share2 } from "lucide-react";
 import { CATEGORY } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { CreateTripStage } from "@/components/create-trip-stage";
 import { redirect } from "next/navigation";
 import { getCurrentUserByEmail } from "@/app/actions/userActions";
 import StageAccordion from "@/components/stage-accordion";
+import BackButton from "@/components/back-button";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -36,6 +37,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
     <div className="mx-auto max-w-[1280px] py-4">
       {currentTrip && currentTrip[0].startDate && currentTrip[0].endDate && (
         <div>
+          <BackButton />
           <div className="items-center justify-between md:flex">
             <div>
               <h2 className="text-3xl font-semibold">{currentTrip[0].title}</h2>
@@ -52,6 +54,9 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
               <Button variant="outline" className="flex-1">
                 <Heart />
                 Favori
+              </Button>
+              <Button variant="outline" size={"icon"} className="flex-1">
+                <EllipsisVertical />
               </Button>
             </div>
           </div>
@@ -104,12 +109,12 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                         jours
                       </span>
                     </div>
-                    <div className="flex w-fit items-center space-x-2 rounded-lg border px-4 py-2 text-sm">
-                      <Hotel size={15} />
-                      {tripStages.length > 0 && (
+                    {tripStages.length > 0 && (
+                      <div className="flex w-fit items-center space-x-2 rounded-lg border px-4 py-2 text-sm">
+                        <Hotel size={15} />
                         <span>{tripStages.length} endroits</span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-end justify-between">
@@ -131,7 +136,9 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
               <div className="hidden md:block"></div>
               {tripStages.length > 0 && (
                 <div className="py-10 md:col-span-2">
-                  <h3 className="text-xl">Mon itinéraire</h3>
+                  {tripStages.length > 0 && (
+                    <h3 className="text-xl">Mon itinéraire</h3>
+                  )}
                   <div className="space-y-4">
                     {tripStages.map((stage, index) => (
                       <StageAccordion

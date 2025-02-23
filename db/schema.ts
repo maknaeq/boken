@@ -146,6 +146,7 @@ export const places = pgTable("places", {
   name: text("name").notNull(),
   description: text("description"),
   category: text("category"), // Ex: "Restaurant", "Musée", "Parc"
+  location: text("location").notNull(),
   latitude: text("latitude"),
   longitude: text("longitude"),
   createdAt: timestamp("created_at").defaultNow().notNull(),

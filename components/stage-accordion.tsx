@@ -7,12 +7,13 @@ import {
 } from "@/components/ui/accordion";
 import CreatePlace from "@/components/create-place";
 import { getPlacesByStageId } from "@/app/actions/placeActions";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "@/lib/type";
 import RatingServerComponentWrapper from "./rating-server-component-wrapper";
 import PlaceActions from "@/components/place-actions";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 type Stage = {
   id: string;
@@ -59,18 +60,32 @@ async function StageAccordion({
                     placeId={place.id}
                     userId={user?.[0].id as string}
                   />
-                  <div>
+                  <div className="space-y-5">
                     <div className="flex items-center gap-2">
                       <h5 className="text-md">{place.name}</h5>
                       <Badge>{place.category}</Badge>
                     </div>
-                    <p className="text-sm text-gray-500">{place.description}</p>
+                    <div>
+                      <p className="text-sm">{place.location}</p>
+                      <p className="text-sm text-gray-500">
+                        {place.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div>
                   <Button size="icon" variant="ghost">
                     <ImagePlus />
                   </Button>
+                  <Link
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.location)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button size="icon" variant="ghost">
+                      <MapPin />
+                    </Button>
+                  </Link>
                   <PlaceActions place={place} />
                 </div>
               </div>

@@ -43,6 +43,7 @@ export async function createPlace(
         name: validatedData.name,
         description: validatedData.description || null,
         category: validatedData.category,
+        location: validatedData.location,
         latitude: validatedData.latitude || null,
         longitude: validatedData.longitude || null,
       })

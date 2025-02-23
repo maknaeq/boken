@@ -61,8 +61,6 @@ interface PlaceActionsProps {
     name: string;
     description: string | null;
     category: string | null;
-    latitude: string | null;
-    longitude: string | null;
     createdAt: Date;
   };
 }
