@@ -9,6 +9,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getCurrentUserByEmail } from "@/app/actions/userActions";
 import Link from "next/link";
+import { ToastContainer } from "@/components/toast-container";
 
 export default async function TripsPage() {
   const session = await auth();
@@ -26,6 +27,7 @@ export default async function TripsPage() {
 
   return (
     <div className="mx-auto max-w-[1280px]">
+      <ToastContainer />
       <FiltersSection />
 
       <div className="flex grid-cols-4 flex-col gap-8 md:grid md:gap-12">

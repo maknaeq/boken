@@ -16,7 +16,7 @@ export const navitems: NavItemType[] = [
   },
 ];
 
-export const CATEGORY: Record<TripCategory, JSX.Element> = {
+export const TRIP_CATEGORIES: Record<TripCategory, JSX.Element> = {
   Backpacking: (
     <svg
       xmlns="http://www.w3.org/2000/svg"

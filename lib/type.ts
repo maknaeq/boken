@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { number, z } from "zod";
 import { LinkProps } from "next/link";
 
 export const formSchema = z
@@ -52,6 +52,29 @@ export const formSchema = z
     path: ["confirmPassword"],
   });
 
+export const updateTripFormSchema = z.object({
+  title: z
+    .string()
+    .min(2, {
+      message: "Le titre doit contenir au moins 2 caractères",
+    })
+    .max(50, {
+      message: "Le titre doit contenir au plus 50 caractères",
+    }),
+  description: z.string().max(500, {
+    message: "La description doit contenir au plus 500 caractères",
+  }),
+  startDate: z.date(),
+  endDate: z.date(),
+  price: number().int().positive(),
+  category: z.enum([
+    "Backpacking",
+    "Luxe",
+    "Roadtrip",
+    "Digital Nomad",
+    "Normal",
+  ]),
+});
 export const createTripFormSchema = z.object({
   title: z
     .string()

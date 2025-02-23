@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Bricolage_Grotesque, Darumadrop_One } from "next/font/google";
 import "@/app/globals.css";
 import UserLoginCard from "@/components/user-login-card";
+import { Toaster } from "@/components/ui/toaster";
 
 const brocolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default async function RootLayout({
           </div>
         </div>
         <main className="px-4">{children}</main>
+        <Toaster />
       </body>
     </html>
   );

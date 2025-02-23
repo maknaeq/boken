@@ -36,7 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { CATEGORY } from "@/lib/constants";
+import { TRIP_CATEGORIES } from "@/lib/constants";
 
 function CreateTripForm({
   user,
@@ -96,7 +96,7 @@ function CreateTripForm({
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="category">Catégorie</FormLabel>
+              <FormLabel htmlFor="category">Style de voyage</FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -108,7 +108,7 @@ function CreateTripForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {(Object.keys(CATEGORY) as TripCategory[]).map(
+                    {(Object.keys(TRIP_CATEGORIES) as TripCategory[]).map(
                       (category) => (
                         <SelectItem key={category} value={category}>
                           {category}
@@ -130,7 +130,7 @@ function CreateTripForm({
               <FormLabel htmlFor="description">Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Tell us a little bit about yourself"
+                  placeholder="Racontez ce que vous allez faire pendant ce voyage"
                   className="resize-none"
                   {...field}
                 />

@@ -7,14 +7,15 @@ import RandomImage from "@/public/images/register-splash_3.jpg";
 import RandomImage2 from "@/public/images/register-splash_2.jpg";
 import RandomImage3 from "@/public/images/register-splash_1.jpg";
 import { Button } from "@/components/ui/button";
-import { Clock, EllipsisVertical, Heart, Hotel, Share2 } from "lucide-react";
-import { CATEGORY } from "@/lib/constants";
+import { Clock, Heart, Hotel, Share2 } from "lucide-react";
+import { TRIP_CATEGORIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { CreateTripStage } from "@/components/create-trip-stage";
 import { redirect } from "next/navigation";
 import { getCurrentUserByEmail } from "@/app/actions/userActions";
 import StageAccordion from "@/components/stage-accordion";
 import BackButton from "@/components/back-button";
+import TripActions from "@/components/trip-actions";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -32,6 +33,18 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   if (!currentTrip || currentTrip.length === 0) {
     redirect("/dashboard/trips");
   }
+
+  const transformedTrip = {
+    id: currentTrip[0].id,
+    userId: currentTrip[0].userId,
+    title: currentTrip[0].title,
+    description: currentTrip[0].description,
+    price: currentTrip[0].price,
+    category: currentTrip[0].category,
+    startDate: currentTrip[0].startDate?.toISOString() || null,
+    endDate: currentTrip[0].endDate?.toISOString() || null,
+    createdAt: currentTrip[0].createdAt.toISOString(),
+  };
 
   return (
     <div className="mx-auto max-w-[1280px] py-4">
@@ -55,9 +68,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                 <Heart />
                 Favori
               </Button>
-              <Button variant="outline" size={"icon"} className="flex-1">
-                <EllipsisVertical />
-              </Button>
+              <TripActions trip={transformedTrip} user={currentUser} />
             </div>
           </div>
           <div className="grid h-[460px] gap-3 py-3 md:grid-cols-3">
@@ -94,7 +105,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                         "flex w-fit items-center space-x-2 rounded-lg border px-4 py-2 text-sm",
                       )}
                     >
-                      {CATEGORY[currentTrip[0].category]}
+                      {TRIP_CATEGORIES[currentTrip[0].category]}
                       <span>{currentTrip[0].category}</span>
                     </div>
                     <div className="flex w-fit items-center space-x-2 rounded-lg border px-4 py-2 text-sm">

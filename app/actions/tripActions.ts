@@ -1,7 +1,11 @@
 "use server";
 import { db } from "@/db/drizzle";
 import { trips, tripStages } from "@/db/schema";
-import { createTripFormSchema, createTripStageFormSchema } from "@/lib/type";
+import {
+  createTripFormSchema,
+  createTripStageFormSchema,
+  updateTripFormSchema,
+} from "@/lib/type";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -70,6 +74,74 @@ export async function getTripById(tripId: string, userId: string) {
   }
 }
 
+export async function deleteTrip(tripId: string, userId: string) {
+  try {
+    await db
+      .delete(trips)
+      .where(and(eq(trips.id, tripId), eq(trips.userId, userId)));
+
+    return {
+      success: true,
+      message: "Trip deleted successfully",
+    };
+  } catch (error: unknown) {
+    console.error("Erreur lors de la suppression du voyage", error);
+    return {
+      success: false,
+      error: "Failed to delete trip",
+    };
+  }
+}
+
+export async function updateTrip(
+  tripId: string,
+  formData: z.infer<typeof updateTripFormSchema>,
+) {
+  try {
+    const title = formData.title;
+    const description = formData.description;
+    const startDate = formData.startDate;
+    const endDate = formData.endDate;
+    const price = formData.price;
+    const category = formData.category;
+
+    if (!title || !description || !startDate || !endDate) {
+      throw new Error("Tous les champs sont obligatoires !");
+    }
+
+    await db
+      .update(trips)
+      .set({
+        title,
+        description,
+        price,
+        category,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+      })
+      .where(eq(trips.id, tripId));
+
+    // Retourner un objet simple au lieu du résultat de la requête
+    return {
+      success: true,
+      data: {
+        id: tripId,
+        title,
+        description,
+        price,
+        category,
+        startDate,
+        endDate,
+      },
+    };
+  } catch (error: unknown) {
+    console.error("Erreur lors de la mise à jour du voyage", error);
+    return {
+      success: false,
+      error: "Erreur lors de la mise à jour du voyage",
+    };
+  }
+}
 export type CreateTripStageResponse = {
   success: boolean;
   stageId?: string;
