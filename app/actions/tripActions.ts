@@ -223,3 +223,39 @@ export async function getTripStages(tripId: string) {
     throw error;
   }
 }
+
+export async function deleteStageById(stageId: string) {
+  try {
+    await db.delete(tripStages).where(eq(tripStages.id, stageId));
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de la suppression de l'étape:", error);
+    return {
+      success: false,
+      error: "Erreur lors de la suppression de l'étape",
+    };
+  }
+}
+
+export async function updateStageById(
+  stageId: string,
+  data: { title: string; description: string; location: string },
+) {
+  try {
+    await db
+      .update(tripStages)
+      .set({
+        title: data.title,
+        description: data.description,
+        location: data.location,
+      })
+      .where(eq(tripStages.id, stageId));
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de l'étape:", error);
+    return {
+      success: false,
+      error: "Erreur lors de la mise à jour de l'étape",
+    };
+  }
+}
