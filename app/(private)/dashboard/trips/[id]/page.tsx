@@ -3,7 +3,6 @@ import { auth } from "@/lib/auth";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import Image from "next/image";
-import RandomImage from "@/public/images/register-splash_3.jpg";
 import RandomImage2 from "@/public/images/register-splash_2.jpg";
 import RandomImage3 from "@/public/images/register-splash_1.jpg";
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,8 @@ import { getCurrentUserByEmail } from "@/app/actions/userActions";
 import StageAccordion from "@/components/stage-accordion";
 import BackButton from "@/components/back-button";
 import TripActions from "@/components/trip-actions";
+import "leaflet/dist/leaflet.css";
+import LeafletMap from "@/components/leaflet-map";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -29,6 +30,12 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   const currentTrip = await getTripById(id, user.id as string);
   const currentUser = await getCurrentUserByEmail(user.email as string);
   const tripStages = await getTripStages(id);
+
+  const locations = tripStages.map((place) => ({
+    latitude: parseFloat(place.latitude as string),
+    longitude: parseFloat(place.longitude as string),
+    name: place.title,
+  }));
 
   if (!currentTrip || currentTrip.length === 0) {
     redirect("/dashboard/trips");
@@ -73,11 +80,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
           </div>
           <div className="grid h-[460px] gap-3 py-3 md:grid-cols-3">
             <div className="col-span-2 row-span-2 w-full overflow-hidden rounded-xl">
-              <Image
-                src={RandomImage}
-                alt="trip image"
-                className="h-full w-full object-cover"
-              />
+              <LeafletMap locations={locations} />
             </div>
             <div className="w-full overflow-hidden rounded-xl">
               <Image
@@ -130,7 +133,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                 </div>
                 <div className="flex items-end justify-between">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-500">Prix</span>
+                    <span className="text-sm text-gray-500">Budget</span>
                     <span className="text-xl">{currentTrip[0].price}€</span>
                   </div>
                   <CreateTripStage user={currentUser} tripId={id} />

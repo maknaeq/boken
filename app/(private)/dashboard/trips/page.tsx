@@ -33,12 +33,6 @@ export default async function TripsPage() {
       <div className="flex grid-cols-4 flex-col gap-8 md:grid md:gap-12">
         <CreateTripCard user={user} />
 
-        <TripCard
-          image={RandomImage}
-          title="Thailand"
-          dates="1 Mai 2025 - 15 Mai 2025"
-        />
-
         {trips?.map(
           (trip) =>
             trip.startDate &&
