@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import CreatePlace from "@/components/create-place";
 import { getPlacesByStageId } from "@/app/actions/placeActions";
-import { ImagePlus, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "@/lib/type";
 import RatingServerComponentWrapper from "./rating-server-component-wrapper";
@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import StageActions from "@/components/stage-actions";
 import ImageCarrousel from "./image-carrousel";
+import AddingImageButton from "./adding-image-button";
 
 export type Stage = {
   id: string;
@@ -38,7 +39,6 @@ async function StageAccordion({
   user: User;
 }) {
   const places = await getPlacesByStageId(stage.id);
-  console.log(places);
   return (
     <div className="flex w-full items-center gap-4">
       <Accordion type="single" collapsible className="w-full">
@@ -78,11 +78,13 @@ async function StageAccordion({
                         </div>
                       </div>
                     </div>
-
                     <div>
-                      <Button size="icon" variant="ghost">
-                        <ImagePlus />
-                      </Button>
+                      <AddingImageButton
+                        userId={user?.[0].id as string}
+                        tripId={stage.tripId as string}
+                        stageId={stage.id}
+                        placeId={place.id}
+                      />
                       <Link
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.location)}`}
                         target="_blank"

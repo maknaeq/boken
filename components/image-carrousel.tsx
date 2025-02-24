@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { PlaceWithPhotos } from "@/lib/type";
+import { useRouter } from "next/navigation";
+import { deletePhoto } from "@/app/actions/photoActions";
+import { motion, AnimatePresence } from "framer-motion";
 
 function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
   const [canScroll, setCanScroll] = useState(false);
@@ -12,6 +15,8 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
   const [showRightGradient, setShowRightGradient] = useState(false);
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
+  const [deletingPhotoId, setDeletingPhotoId] = useState<string | null>(null);
+  const router = useRouter();
 
   const checkScroll = useCallback(() => {
     const container = document.getElementById(`photos-${place.id}`);
@@ -47,8 +52,20 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
     setShowRightGradient(!atEnd);
   }, []);
 
-  const handleDeleteImage = async (photoId: string) => {
-    console.log("delete photo", photoId);
+  const handleDeleteImage = async (photoId: string, photoUrl: string) => {
+    setDeletingPhotoId(photoId);
+    try {
+      const result = await deletePhoto(photoId, photoUrl);
+      if (result.success) {
+        router.refresh();
+      } else {
+        console.error("Failed to delete photo");
+        setDeletingPhotoId(null);
+      }
+    } catch (error) {
+      console.error("Error deleting photo:", error);
+      setDeletingPhotoId(null);
+    }
   };
 
   useEffect(() => {
@@ -71,6 +88,10 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
       clearTimeout(timer);
     };
   }, [checkScroll, handleScroll, place.id]);
+
+  if (place.photos.length === 0) {
+    return null;
+  }
 
   return (
     <div className="relative h-32">
@@ -104,26 +125,36 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
             "no-scrollbar flex gap-2 overflow-x-auto scroll-smooth",
           )}
         >
-          {place.photos.map((photo, index) => (
-            <div
-              key={index}
-              className="relative h-20 w-28 flex-none rounded-lg bg-gray-200"
-            >
-              <Image
-                src={photo.url}
-                alt={photo.url}
-                width={112}
-                height={80}
-                className="h-full w-full rounded-lg object-cover"
-              />
-              <button
-                onClick={() => handleDeleteImage(photo.id)}
-                className="absolute right-0.5 top-0.5 rounded-lg bg-gray-500/50 p-1 text-background"
+          <AnimatePresence>
+            {place.photos.map((photo) => (
+              <motion.div
+                key={photo.id}
+                initial={{ opacity: 1, scale: 1 }}
+                animate={{
+                  opacity: deletingPhotoId === photo.id ? 0 : 1,
+                  scale: deletingPhotoId === photo.id ? 0.7 : 1,
+                }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.2 }}
+                className="relative h-20 w-28 flex-none rounded-lg bg-gray-200"
               >
-                <X size={15} />
-              </button>
-            </div>
-          ))}
+                <Image
+                  src={photo.url}
+                  alt={photo.url}
+                  width={112}
+                  height={80}
+                  className="h-full w-full rounded-lg object-cover"
+                />
+                <button
+                  onClick={() => handleDeleteImage(photo.id, photo.url)}
+                  className="absolute right-0.5 top-0.5 rounded-lg bg-gray-500/50 p-1 text-background"
+                  disabled={deletingPhotoId === photo.id}
+                >
+                  <X size={15} />
+                </button>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
         {/* Gradient droit */}
