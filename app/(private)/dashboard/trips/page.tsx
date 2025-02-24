@@ -27,7 +27,6 @@ export default async function TripsPage() {
 
   return (
     <div className="mx-auto max-w-[1280px]">
-      <UploadFile />
       <ToastContainer />
       <FiltersSection />
 
