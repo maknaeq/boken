@@ -1,31 +1,12 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { PlaceWithPhotos } from "@/lib/type";
 
-type PlaceProps = {
-  place: {
-    id: string;
-    stageId: string;
-    name: string;
-    category: string;
-    description: string;
-    location: string;
-    latitude: string;
-    longitude: string;
-    photos: {
-      id: string;
-      placeId: string;
-      url: string;
-    }[];
-    createdAt: Date;
-  };
-};
-
-function ImageCarrousel({ place }: PlaceProps) {
-  console.log("place", place);
+function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
   const [canScroll, setCanScroll] = useState(false);
   const [showLeftGradient, setShowLeftGradient] = useState(false);
   const [showRightGradient, setShowRightGradient] = useState(false);
@@ -65,6 +46,10 @@ function ImageCarrousel({ place }: PlaceProps) {
     setShowLeftGradient(!atStart);
     setShowRightGradient(!atEnd);
   }, []);
+
+  const handleDeleteImage = async (photoId: string) => {
+    console.log("delete photo", photoId);
+  };
 
   useEffect(() => {
     const container = document.getElementById(`photos-${place.id}`);
@@ -119,15 +104,24 @@ function ImageCarrousel({ place }: PlaceProps) {
             "no-scrollbar flex gap-2 overflow-x-auto scroll-smooth",
           )}
         >
-          {place.photos.map((_, i) => (
-            <div key={i} className="h-20 w-28 flex-none rounded-lg bg-gray-200">
+          {place.photos.map((photo, index) => (
+            <div
+              key={index}
+              className="relative h-20 w-28 flex-none rounded-lg bg-gray-200"
+            >
               <Image
-                src={place.photos[i].url}
-                alt={place.photos[i].url}
+                src={photo.url}
+                alt={photo.url}
                 width={112}
                 height={80}
                 className="h-full w-full rounded-lg object-cover"
               />
+              <button
+                onClick={() => handleDeleteImage(photo.id)}
+                className="absolute right-0.5 top-0.5 rounded-lg bg-gray-500/50 p-1 text-background"
+              >
+                <X size={15} />
+              </button>
             </div>
           ))}
         </div>
