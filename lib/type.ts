@@ -176,3 +176,38 @@ export const createPlaceFormSchema = z.object({
 });
 
 export type Place = z.infer<typeof createPlaceFormSchema>;
+
+export interface PhotoData {
+  id: string;
+  url: string;
+  placeId: string;
+  createdAt: Date;
+}
+
+export interface PlaceWithPhotos {
+  id: string;
+  stageId: string | null;
+  name: string;
+  description: string | null;
+  category: string | null;
+  location: string;
+  latitude: string | null;
+  longitude: string | null;
+  createdAt: Date;
+  photos: PhotoData[];
+}
+
+export interface QueryResult {
+  id: string;
+  stageId: string | null;
+  name: string;
+  description: string | null;
+  category: string | null;
+  location: string;
+  latitude: string | null;
+  longitude: string | null;
+  createdAt: Date;
+  photoId: string | null;
+  photoUrl: string | null;
+  photoCreatedAt: Date | null;
+}

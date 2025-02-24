@@ -2,8 +2,12 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { places, tripStages } from "@/db/schema";
-import { createPlaceFormSchema } from "@/lib/type";
+import { photos, places, tripStages } from "@/db/schema";
+import {
+  createPlaceFormSchema,
+  PlaceWithPhotos,
+  QueryResult,
+} from "@/lib/type";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { createRatingPlaceById } from "@/app/actions/reviewActions";
@@ -93,8 +97,60 @@ export async function deletePlaceById(placeId: string) {
   }
 }
 
-export async function getPlacesByStageId(stageId: string) {
-  return db.select().from(places).where(eq(places.stageId, stageId));
+export async function getPlacesByStageId(
+  stageId: string,
+): Promise<PlaceWithPhotos[]> {
+  const results = await db
+    .select({
+      id: places.id,
+      stageId: places.stageId,
+      name: places.name,
+      description: places.description,
+      category: places.category,
+      location: places.location,
+      latitude: places.latitude,
+      longitude: places.longitude,
+      createdAt: places.createdAt,
+      photoId: photos.id,
+      photoUrl: photos.url,
+      photoCreatedAt: photos.createdAt,
+    })
+    .from(places)
+    .leftJoin(photos, eq(photos.placeId, places.id))
+    .where(eq(places.stageId, stageId));
+
+  const placesMap = new Map<string, PlaceWithPhotos>();
+
+  (results as QueryResult[]).forEach((row) => {
+    if (!placesMap.has(row.id)) {
+      placesMap.set(row.id, {
+        id: row.id,
+        stageId: row.stageId,
+        name: row.name,
+        description: row.description,
+        category: row.category,
+        location: row.location,
+        latitude: row.latitude,
+        longitude: row.longitude,
+        createdAt: row.createdAt,
+        photos: [],
+      });
+    }
+
+    if (row.photoId && row.photoUrl && row.photoCreatedAt) {
+      const place = placesMap.get(row.id);
+      if (place) {
+        place.photos.push({
+          id: row.photoId,
+          url: row.photoUrl,
+          placeId: row.id,
+          createdAt: row.photoCreatedAt,
+        });
+      }
+    }
+  });
+
+  return Array.from(placesMap.values());
 }
 
 export async function updatePlaceById(

@@ -172,14 +172,22 @@ export const photos = pgTable("photos", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
-  tripId: text("trip_id").references(() => trips.id, { onDelete: "cascade" }), // Peut être NULL
-  stageId: text("stage_id").references(() => tripStages.id, {
-    onDelete: "cascade",
-  }), // Peut être NULL
-  placeId: text("place_id").references(() => places.id, {
-    onDelete: "cascade",
-  }), // Peut être NULL
+  userId: text("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  tripId: text("trip_id")
+    .references(() => trips.id, { onDelete: "cascade" })
+    .notNull(),
+  stageId: text("stage_id")
+    .references(() => tripStages.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  placeId: text("place_id")
+    .references(() => places.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
   url: text("url").notNull(),
   description: text("description"),
   createdAt: timestamp("created_at").defaultNow().notNull(),

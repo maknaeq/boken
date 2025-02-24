@@ -43,6 +43,13 @@
       "when": 1740334345997,
       "tag": "0005_smiling_mister_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1740418831244,
+      "tag": "0006_adorable_molten_man",
+      "breakpoints": true
     }
   ]
 }

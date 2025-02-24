@@ -9,7 +9,6 @@ import { redirect } from "next/navigation";
 import { getCurrentUserByEmail } from "@/app/actions/userActions";
 import Link from "next/link";
 import { ToastContainer } from "@/components/toast-container";
-import UploadFile from "@/components/upload-file";
 
 export default async function TripsPage() {
   const session = await auth();
