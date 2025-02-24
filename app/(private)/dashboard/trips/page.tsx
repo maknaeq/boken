@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUserByEmail } from "@/app/actions/userActions";
 import Link from "next/link";
 import { ToastContainer } from "@/components/toast-container";
+import UploadFile from "@/components/upload-file";
 
 export default async function TripsPage() {
   const session = await auth();
@@ -26,6 +27,7 @@ export default async function TripsPage() {
 
   return (
     <div className="mx-auto max-w-[1280px]">
+      <UploadFile />
       <ToastContainer />
       <FiltersSection />
 
