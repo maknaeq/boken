@@ -30,6 +30,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   const currentTrip = await getTripById(id, user.id as string);
   const currentUser = await getCurrentUserByEmail(user.email as string);
   const tripStages = await getTripStages(id);
+  console.log("trip stage", tripStages);
 
   const locations = tripStages.map((place) => ({
     latitude: parseFloat(place.latitude as string),

@@ -26,16 +26,6 @@ export type Stage = {
   latitude: string | null;
   longitude: string | null;
   createdAt: Date;
-  photos: {
-    id: string;
-    userId: string;
-    tripId: string;
-    stageId: string;
-    placeId: string;
-    url: string;
-    description: string | null;
-    createdAt: Date;
-  }[];
 };
 
 async function StageAccordion({
