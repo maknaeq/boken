@@ -5,6 +5,7 @@ import "@/app/globals.css";
 import UserLoginCard from "@/components/user-login-card";
 import { Separator } from "@/components/ui/separator";
 import DashboardNavItems from "@/components/dashboard-navitems";
+import { Toaster } from "@/components/ui/toaster";
 
 const brocolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -45,10 +46,9 @@ export default async function RootLayout({
           </div>
         </div>
         <Separator />
-        <nav className="py-4">
-          <DashboardNavItems />
-        </nav>
+        <DashboardNavItems />
         <main className="px-4">{children}</main>
+        <Toaster />
       </body>
     </html>
   );

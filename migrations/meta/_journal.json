@@ -8,6 +8,48 @@
       "when": 1739868065617,
       "tag": "0000_unusual_amazoness",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1740168952618,
+      "tag": "0001_silent_spot",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740169667449,
+      "tag": "0002_silly_triathlon",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1740170905886,
+      "tag": "0003_lyrical_the_leader",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1740299095593,
+      "tag": "0004_overconfident_la_nuit",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1740334345997,
+      "tag": "0005_smiling_mister_sinister",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1740418831244,
+      "tag": "0006_adorable_molten_man",
+      "breakpoints": true
     }
   ]
 }
