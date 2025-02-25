@@ -57,7 +57,9 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
     try {
       const result = await deletePhoto(photoId, photoUrl);
       if (result.success) {
-        router.refresh();
+        setTimeout(() => {
+          router.refresh();
+        }, 300);
       } else {
         console.error("Failed to delete photo");
         setDeletingPhotoId(null);
@@ -77,7 +79,7 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
       checkScroll();
     }
 
-    const timer = setTimeout(checkScroll, 100); // Délai légèrement plus long pour s'assurer que le DOM est complètement chargé
+    const timer = setTimeout(checkScroll, 100);
     window.addEventListener("resize", checkScroll);
 
     return () => {
@@ -125,18 +127,31 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
             "no-scrollbar flex gap-2 overflow-x-auto scroll-smooth",
           )}
         >
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {place.photos.map((photo) => (
               <motion.div
                 key={photo.id}
-                initial={{ opacity: 1, scale: 1 }}
+                layout
+                initial={{ opacity: 1, width: "7rem", height: "5rem" }}
                 animate={{
                   opacity: deletingPhotoId === photo.id ? 0 : 1,
-                  scale: deletingPhotoId === photo.id ? 0.7 : 1,
+                  width: deletingPhotoId === photo.id ? 0 : "7rem",
+                  height: "5rem",
+                  marginRight: deletingPhotoId === photo.id ? 0 : "0.5rem",
                 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.2 }}
-                className="relative h-20 w-28 flex-none rounded-lg bg-gray-200"
+                exit={{
+                  opacity: 0,
+                  width: 0,
+                  marginRight: 0,
+                  transition: { duration: 0.3 },
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 30,
+                }}
+                className="relative flex-none overflow-hidden rounded-lg bg-gray-200"
+                style={{ marginRight: "0.5rem" }}
               >
                 <Image
                   src={photo.url}
