@@ -11,12 +11,15 @@ import Link from "next/link";
 import { ToastContainer } from "@/components/toast-container";
 import { getFavorites } from "@/app/actions/favoriteActions";
 
+type searchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
 export default async function TripsPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: searchParams;
 }) {
   const session = await auth();
+  const srcParams = await searchParams;
 
   if (!session?.user?.email) {
     redirect("/login");
@@ -24,7 +27,7 @@ export default async function TripsPage({
 
   const user = await getCurrentUserByEmail(session.user.email);
   const favorites = await getFavorites(user?.[0].id as string);
-  const showFavorites = searchParams.favorites === "true";
+  const showFavorites = srcParams.favorites === "true";
 
   function isFavorite(tripId: string) {
     return !!favorites.some((fav) => fav.tripId === tripId);
