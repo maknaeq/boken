@@ -4,6 +4,7 @@ import { Bricolage_Grotesque, Darumadrop_One } from "next/font/google";
 import "@/app/globals.css";
 import UserLoginCard from "@/components/user-login-card";
 import { Toaster } from "@/components/ui/toaster";
+import { Footer } from "@/components/footer";
 
 const brocolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -26,7 +27,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${brocolageGrotesque.className}`}>
+      <body
+        className={`${brocolageGrotesque.className} flex min-h-screen flex-col`}
+      >
         <div className="px-4 pb-5 pt-8">
           {/* <div className="absolute z-50 h-52 w-full max-w-[cacl(100vw-30px)] bg-gradient-to-b from-gray-900 to-gray-50/0 px-3 py-5 text-background"> */}
           <div className="mx-auto flex w-full max-w-[1280px] items-start justify-between">
@@ -43,7 +46,8 @@ export default async function RootLayout({
             </div>
           </div>
         </div>
-        <main className="px-4">{children}</main>
+        <main className="flex-1 px-4">{children}</main>
+        <Footer />
         <Toaster />
       </body>
     </html>
