@@ -77,7 +77,7 @@ export const updateTripFormSchema = z.object({
 });
 export const createTripFormSchema = z.object({
   title: z.string().min(1, "Le titre est requis"),
-  description: z.string(),
+  description: z.string().optional(),
   dateRange: z.object({
     from: z.date(),
     to: z.date(),
@@ -90,7 +90,7 @@ export const createTripFormSchema = z.object({
     "Digital Nomad",
     "Normal",
   ]),
-  image: z.string().min(1, "Une image est requise"),
+  image: z.string().optional(),
 });
 
 export const createTripStageFormSchema = z.object({

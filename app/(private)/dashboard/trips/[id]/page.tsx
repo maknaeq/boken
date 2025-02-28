@@ -3,8 +3,6 @@ import { auth } from "@/lib/auth";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import Image from "next/image";
-import RandomImage2 from "@/public/images/register-splash_2.jpg";
-import RandomImage3 from "@/public/images/register-splash_1.jpg";
 import { Button } from "@/components/ui/button";
 import { Clock, Heart, Hotel, Share2 } from "lucide-react";
 import { TRIP_CATEGORIES } from "@/lib/constants";
@@ -17,6 +15,7 @@ import BackButton from "@/components/back-button";
 import TripActions from "@/components/trip-actions";
 import "leaflet/dist/leaflet.css";
 import LeafletMap from "@/components/leaflet-map";
+import { getPhotosByTripId } from "@/app/actions/placeActions";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -30,6 +29,8 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   const currentTrip = await getTripById(id, user.id as string);
   const currentUser = await getCurrentUserByEmail(user.email as string);
   const tripStages = await getTripStages(id);
+  const tripPhotos = await getPhotosByTripId(id);
+  console.log("tripPhotos", tripPhotos);
 
   const locations = tripStages.map((place) => ({
     latitude: parseFloat(place.latitude as string),
@@ -82,24 +83,45 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
             <div className="col-span-2 row-span-2 w-full overflow-hidden rounded-xl">
               <LeafletMap locations={locations} />
             </div>
-            <div className="w-full overflow-hidden rounded-xl">
-              <Image
-                src={RandomImage2}
-                alt="trip image"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="w-full overflow-hidden rounded-xl">
-              <Image
-                src={RandomImage3}
-                alt="trip image"
-                className="h-full w-full object-cover"
-              />
-            </div>
+            {tripPhotos.length !== 0 ? (
+              <>
+                <div className="w-full overflow-hidden rounded-xl">
+                  <Image
+                    src={tripPhotos[0]?.url}
+                    alt="trip image"
+                    width={400}
+                    height={200}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="w-full overflow-hidden rounded-xl">
+                  <Image
+                    src={tripPhotos[1]?.url}
+                    alt="trip image"
+                    width={400}
+                    height={200}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex w-full items-center justify-center overflow-hidden rounded-xl border border-dashed text-sm">
+                  <p className="font-light text-gray-500">
+                    Aucune image pour le moment
+                  </p>
+                </div>
+                <div className="flex w-full items-center justify-center overflow-hidden rounded-xl border border-dashed text-sm">
+                  <p className="font-light text-gray-500">
+                    Aucune image pour le moment
+                  </p>
+                </div>
+              </>
+            )}
           </div>
           <div className="py-4">
-            <div className="grid grid-cols-3 gap-32">
-              <div className="space-y-4 rounded-xl border p-4 shadow-sm">
+            <div className="flex flex-col gap-20 md:grid md:grid-cols-3 md:gap-32">
+              <div className="order-2 space-y-4 rounded-xl border p-4 shadow-sm md:order-1">
                 <div className="space-y-2">
                   <h3 className="text-xl">Détails</h3>
                   <div className="flex flex-wrap items-center gap-1">
@@ -139,7 +161,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                   <CreateTripStage user={currentUser} tripId={id} />
                 </div>
               </div>
-              <div className="col-span-2">
+              <div className="order-1 col-span-2 md:order-2">
                 <h3 className="text-xl">Description</h3>
                 <p className="font-light text-gray-500">
                   {currentTrip[0].description}

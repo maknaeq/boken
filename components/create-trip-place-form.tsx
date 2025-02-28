@@ -1,7 +1,7 @@
 // components/forms/create-place-form.tsx
 "use client";
 
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -151,7 +151,7 @@ export default function CreatePlaceForm({
     }
   };
 
-  const debouncedFetch = React.useCallback(
+  const debouncedFetch = useCallback(
     debounce((value: string) => fetchLocations(value), 500),
     [],
   );
@@ -199,9 +199,9 @@ export default function CreatePlaceForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom du lieu</FormLabel>
+              <FormLabel>Nom de l&apos;activité</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Ex: Tour Eiffel" />
+                <Input {...field} placeholder="Ex: Journée à la plage" />
               </FormControl>
               <FormMessage />
             </FormItem>

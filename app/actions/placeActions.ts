@@ -172,3 +172,17 @@ export async function updatePlaceById(
     return { success: false, error: "Une erreur est survenue" };
   }
 }
+
+export async function getPhotosByTripId(tripId: string) {
+  return db
+    .select({
+      id: photos.id,
+      url: photos.url,
+      placeId: photos.placeId,
+      createdAt: photos.createdAt,
+    })
+    .from(photos)
+    .innerJoin(places, eq(places.id, photos.placeId))
+    .innerJoin(tripStages, eq(tripStages.id, places.stageId))
+    .where(eq(tripStages.tripId, tripId));
+}

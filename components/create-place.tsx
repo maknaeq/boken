@@ -14,21 +14,15 @@ interface CreateTripStageProps {
 export default function CreatePlace({ user, stageId }: CreateTripStageProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // if (!user) return null;
-
   return (
     <div className="rounded-xl">
       <Dialog open={isOpen}>
-        <Button
-          variant={"outline"}
-          onClick={() => setIsOpen(true)}
-          className="w-full border-dashed"
-        >
+        <Button onClick={() => setIsOpen(true)} size={"sm"}>
           <Plus />
-          Ajouter un lieu
+          Ajouter une/des activité(s)
         </Button>
         <DialogContent className="sm:max-w-md">
-          <DialogTitle>Ajouter un lieu</DialogTitle>
+          <DialogTitle>Ajouter une/des activité(s)</DialogTitle>
           <CreateTripPlaceForm
             stageId={stageId}
             user={user}

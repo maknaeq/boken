@@ -5,7 +5,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { RedirectButtonType } from "@/lib/type";
 import { usePathname } from "next/navigation";
-import { privatePaths } from "@/routes";
+import { privateRoutes } from "@/routes";
 
 function RedirectButton({
   className,
@@ -15,7 +15,7 @@ function RedirectButton({
 }: RedirectButtonType) {
   //TODO: refactor to use it better
   const pathname = usePathname();
-  if (privatePaths.some((path) => pathname.includes(path))) {
+  if (privateRoutes.some((path) => pathname.includes(path))) {
     return null;
   }
   return (

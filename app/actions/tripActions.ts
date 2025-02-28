@@ -14,39 +14,47 @@ export async function createTrip(
   userId: string,
 ) {
   try {
-    // Récupération des données du formulaire
-    const title = formData.title;
-    const description = formData.description;
-    const startDate = formData.dateRange.from;
-    const endDate = formData.dateRange.to;
-    const price = formData.price;
-    const category = formData.category;
-    const imageCover = formData.image;
+    const {
+      title,
+      description,
+      dateRange,
+      price,
+      category,
+      image: imageCover,
+    } = formData;
+    const startDate = dateRange.from;
+    const endDate = dateRange.to;
 
-    // ID utilisateur hardcodé (Clerk ou autre système d'auth)
-
-    // Validation des données (éviter les erreurs)
-    if (!title || !description || !startDate || !endDate) {
-      throw new Error("Tous les champs sont obligatoires !");
+    // Validation des données - sans vérifier description
+    if (!title || !startDate || !endDate) {
+      return {
+        success: false,
+        error: "Le titre et les dates sont obligatoires",
+      };
     }
 
     // Insertion dans la base de données
     const newTrip = await db
       .insert(trips)
       .values({
-        userId, // Assure-toi que la colonne `userId` est bien définie en BDD
+        userId,
         title,
-        description,
+        description: description || "", // Utiliser une chaîne vide si pas de description
         price: parseInt(price),
         category,
         imageCover,
-        startDate: new Date(startDate), // Convertir en Date (évite erreurs SQL)
+        startDate: new Date(startDate),
         endDate: new Date(endDate),
       })
       .returning({ id: trips.id });
+
     return { success: true, tripId: newTrip[0].id };
   } catch (error: unknown) {
     console.error("Erreur lors de la création du voyage", error);
+    return {
+      success: false,
+      error: "Une erreur est survenue lors de la création du voyage",
+    };
   }
 }
 

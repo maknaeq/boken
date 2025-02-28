@@ -1,2 +1,2 @@
-export const publicPaths = ["/", "/login", "/signup"];
-export const privatePaths = ["/dashboard", "/settings"];
+export const publicRoutes = ["/", "/login", "/signup"];
+export const privateRoutes = ["/dashboard", "/settings"];
