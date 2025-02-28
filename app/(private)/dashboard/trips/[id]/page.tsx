@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Clock, Heart, Hotel, Share2 } from "lucide-react";
+import { Clock, Heart, Hotel } from "lucide-react";
 import { TRIP_CATEGORIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { CreateTripStage } from "@/components/create-trip-stage";
@@ -16,6 +16,7 @@ import TripActions from "@/components/trip-actions";
 import "leaflet/dist/leaflet.css";
 import LeafletMap from "@/components/leaflet-map";
 import { getPhotosByTripId } from "@/app/actions/placeActions";
+import ShareButton from "@/components/share-button";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -30,7 +31,9 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   const currentUser = await getCurrentUserByEmail(user.email as string);
   const tripStages = await getTripStages(id);
   const tripPhotos = await getPhotosByTripId(id);
-  console.log("tripPhotos", tripPhotos);
+  const isOwner = currentTrip?.[0].userId === currentUser?.[0].id;
+
+  const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/trips/${id}`;
 
   const locations = tripStages.map((place) => ({
     latitude: parseFloat(place.latitude as string),
@@ -68,15 +71,14 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
               </p>
             </div>
             <div className="flex space-x-2 pt-5 md:block">
-              <Button variant="outline" className="flex-1">
-                <Share2 />
-                Partager
-              </Button>
+              <ShareButton currentTrip={currentTrip} shareUrl={shareUrl} />
               <Button variant="outline" className="flex-1">
                 <Heart />
                 Favori
               </Button>
-              <TripActions trip={transformedTrip} user={currentUser} />
+              {isOwner && (
+                <TripActions trip={transformedTrip} user={currentUser} />
+              )}
             </div>
           </div>
           <div className="grid h-[460px] gap-3 py-3 md:grid-cols-3">

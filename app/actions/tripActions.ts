@@ -71,15 +71,25 @@ export async function getAllUserTripsInfos(userId: string) {
   }
 }
 
-export async function getTripById(tripId: string, userId: string) {
+export async function getTripById(tripId: string, userId?: string) {
   try {
+    // Si userId est fourni, vérifiez la propriété
+    if (userId) {
+      const req = await db
+        .selectDistinct()
+        .from(trips)
+        .where(and(eq(trips.id, tripId), eq(trips.userId, userId)));
+      return req;
+    }
+
+    // Sinon, récupérez simplement le voyage
     const req = await db
       .selectDistinct()
       .from(trips)
-      .where(and(eq(trips.id, tripId), eq(trips.userId, userId)));
+      .where(eq(trips.id, tripId));
 
     return req;
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Erreur lors de la récupération du voyage", error);
   }
 }
