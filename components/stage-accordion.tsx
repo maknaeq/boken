@@ -53,7 +53,7 @@ async function StageAccordion({
           <AccordionContent className="space-y-4">
             <p>{stage.description}</p>
             <div className="space-y-10 py-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center md:gap-0">
                 <h4 className="text-lg font-semibold">Activités</h4>
                 <CreatePlace user={user} stageId={stage.id} />
               </div>
@@ -67,7 +67,7 @@ async function StageAccordion({
                   >
                     <div>
                       <div className="space-y-5">
-                        <div className="flex w-full items-center justify-between">
+                        <div className="w-full items-center justify-between md:flex">
                           <div className="flex items-center gap-2">
                             <h5 className="text-lg font-semibold">
                               {place.name}

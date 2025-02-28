@@ -120,8 +120,8 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
             )}
           </div>
           <div className="py-4">
-            <div className="grid grid-cols-3 gap-32">
-              <div className="space-y-4 rounded-xl border p-4 shadow-sm">
+            <div className="flex flex-col gap-20 md:grid md:grid-cols-3 md:gap-32">
+              <div className="order-2 space-y-4 rounded-xl border p-4 shadow-sm md:order-1">
                 <div className="space-y-2">
                   <h3 className="text-xl">Détails</h3>
                   <div className="flex flex-wrap items-center gap-1">
@@ -161,7 +161,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                   <CreateTripStage user={currentUser} tripId={id} />
                 </div>
               </div>
-              <div className="col-span-2">
+              <div className="order-1 col-span-2 md:order-2">
                 <h3 className="text-xl">Description</h3>
                 <p className="font-light text-gray-500">
                   {currentTrip[0].description}
