@@ -20,27 +20,43 @@ type ShareButtonProps = {
   shareUrl: string;
 };
 
-function ShareButton({ currentTrip, shareUrl }: ShareButtonProps) {
-  return (
-    <Button
-      variant="outline"
-      className="flex-1"
-      onClick={async () => {
+export default function ShareButton({
+  currentTrip,
+  shareUrl,
+}: ShareButtonProps) {
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
         await navigator.share({
           title: currentTrip?.[0].title,
           text: `Découvre mon voyage: ${currentTrip?.[0].title}`,
           url: shareUrl,
         });
+      } else {
+        // Fallback: copier le lien dans le presse-papier
+        await navigator.clipboard.writeText(shareUrl);
         toast({
           title: "Lien copié",
-          description: "Le lien de partage a été copié dans le presse-papier",
+          description: "Le lien a été copié dans le presse-papier",
         });
-      }}
-    >
-      <Share2 />
+      }
+    } catch (error) {
+      // Si l'utilisateur annule le partage ou une autre erreur survient
+      if (error instanceof Error && error.name !== "AbortError") {
+        // Ne pas afficher de toast si l'utilisateur a simplement annulé
+        toast({
+          variant: "destructive",
+          title: "Erreur de partage",
+          description: "Impossible de partager le lien",
+        });
+      }
+    }
+  };
+
+  return (
+    <Button variant="outline" className="flex-1" onClick={handleShare}>
+      <Share2 className="mr-2 h-4 w-4" />
       Partager
     </Button>
   );
 }
-
-export default ShareButton;

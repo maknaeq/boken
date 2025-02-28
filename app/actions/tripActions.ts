@@ -71,26 +71,26 @@ export async function getAllUserTripsInfos(userId: string) {
   }
 }
 
-export async function getTripById(tripId: string, userId?: string) {
+export async function getTripById(tripId: string, userId: string) {
   try {
-    // Si userId est fourni, vérifiez la propriété
-    if (userId) {
-      const req = await db
-        .selectDistinct()
-        .from(trips)
-        .where(and(eq(trips.id, tripId), eq(trips.userId, userId)));
-      return req;
-    }
-
-    // Sinon, récupérez simplement le voyage
-    const req = await db
+    // Récupération du voyage sans vérification du propriétaire
+    const trip = await db
       .selectDistinct()
       .from(trips)
       .where(eq(trips.id, tripId));
 
-    return req;
+    if (trip.length === 0) {
+      return null;
+    }
+
+    // Ajout d'une propriété pour indiquer si l'utilisateur est propriétaire
+    return trip.map((t) => ({
+      ...t,
+      isOwner: t.userId === userId,
+    }));
   } catch (error) {
     console.error("Erreur lors de la récupération du voyage", error);
+    return null;
   }
 }
 

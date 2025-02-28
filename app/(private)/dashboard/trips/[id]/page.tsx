@@ -31,7 +31,12 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   const currentUser = await getCurrentUserByEmail(user.email as string);
   const tripStages = await getTripStages(id);
   const tripPhotos = await getPhotosByTripId(id);
-  const isOwner = currentTrip?.[0].userId === currentUser?.[0].id;
+
+  if (!currentTrip || currentTrip.length === 0) {
+    redirect("/dashboard/trips");
+  }
+
+  const isOwner = currentTrip[0].isOwner;
 
   const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/trips/${id}`;
 
@@ -97,13 +102,21 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                   />
                 </div>
                 <div className="w-full overflow-hidden rounded-xl">
-                  <Image
-                    src={tripPhotos[1]?.url}
-                    alt="trip image"
-                    width={400}
-                    height={200}
-                    className="h-full w-full object-cover"
-                  />
+                  {tripPhotos[1] ? (
+                    <Image
+                      src={tripPhotos[1].url}
+                      alt="trip image"
+                      width={400}
+                      height={200}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center border border-dashed text-sm">
+                      <p className="font-light text-gray-500">
+                        Aucune image pour le moment
+                      </p>
+                    </div>
+                  )}
                 </div>
               </>
             ) : (
@@ -160,7 +173,9 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                     <span className="text-sm text-gray-500">Budget</span>
                     <span className="text-xl">{currentTrip[0].price}€</span>
                   </div>
-                  <CreateTripStage user={currentUser} tripId={id} />
+                  {isOwner && (
+                    <CreateTripStage user={currentUser} tripId={id} />
+                  )}
                 </div>
               </div>
               <div className="order-1 col-span-2 md:order-2">
