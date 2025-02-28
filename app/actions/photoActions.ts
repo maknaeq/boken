@@ -56,3 +56,17 @@ export async function deletePhoto(photoId: string, photoUrl: string) {
     return { success: false, error: "Failed to delete photo" };
   }
 }
+
+export async function getAllUserPhotos(userId: string) {
+  try {
+    const allPhotos = await db
+      .select()
+      .from(photos)
+      .where(eq(photos.userId, userId));
+
+    return allPhotos;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des photos:", error);
+    return [];
+  }
+}
