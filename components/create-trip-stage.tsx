@@ -19,7 +19,7 @@ export function CreateTripStage({ user, tripId }: CreateTripStageProps) {
   return (
     <div className="rounded-xl">
       <Dialog open={isOpen}>
-        <Button onClick={() => setIsOpen(true)}>
+        <Button onClick={() => setIsOpen(true)} className="w-full">
           <Plus />
           Ajouter une étape
         </Button>

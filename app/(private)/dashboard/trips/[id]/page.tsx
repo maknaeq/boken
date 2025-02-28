@@ -165,7 +165,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                     )}
                   </div>
                 </div>
-                <div className="flex items-end justify-between">
+                <div className="flex flex-col justify-between gap-3">
                   <div className="flex flex-col">
                     <span className="text-sm text-gray-500">Budget</span>
                     <span className="text-xl">{currentTrip[0].price}€</span>
