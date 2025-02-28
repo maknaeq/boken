@@ -92,12 +92,13 @@ export default function Home() {
           </span>{" "}
           destinations
         </h3>
+        // ...existing code...
         <div className="mt-20 grid grid-cols-10 grid-rows-2 gap-3">
           <div className="relative col-span-5 md:col-span-6">
             <MagneticImage
               src={Spain}
               alt="Spain"
-              title="🇪🇸 Espagne"
+              title={`\u{1F1EA}\u{1F1F8} Espagne`}
               description="Barcelone"
             />
           </div>
@@ -105,7 +106,7 @@ export default function Home() {
             <MagneticImage
               src={Japan}
               alt="Japan"
-              title="🇯🇵 Japon"
+              title={`\u{1F1EF}\u{1F1F5} Japon`}
               description="Tokyo"
             />
           </div>
@@ -113,7 +114,7 @@ export default function Home() {
             <MagneticImage
               src={Mexico}
               alt="Mexico"
-              title="🇲🇽 Mexique"
+              title={`\u{1F1F2}\u{1F1FD} Mexique`}
               description="Mexico city"
             />
           </div>
@@ -121,7 +122,7 @@ export default function Home() {
             <MagneticImage
               src={Danemark}
               alt="Danemark"
-              title="🇩🇰 Danemark"
+              title={`\u{1F1E9}\u{1F1F0} Danemark`}
               description="Copenhague"
             />
           </div>
