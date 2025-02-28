@@ -80,5 +80,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate", "@tailwindcss/typography")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
