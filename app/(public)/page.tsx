@@ -92,7 +92,6 @@ export default function Home() {
           </span>{" "}
           destinations
         </h3>
-        // ...existing code...
         <div className="mt-20 grid grid-cols-10 grid-rows-2 gap-3">
           <div className="relative col-span-5 md:col-span-6">
             <MagneticImage
