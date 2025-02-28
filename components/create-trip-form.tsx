@@ -326,7 +326,7 @@ function CreateTripForm({
           name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="price">Prix</FormLabel>
+              <FormLabel htmlFor="price">Budget</FormLabel>
               <FormControl>
                 <Input {...field} id="price" type="number" />
               </FormControl>
