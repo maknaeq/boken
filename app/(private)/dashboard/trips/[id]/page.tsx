@@ -3,8 +3,7 @@ import { auth } from "@/lib/auth";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Clock, Heart, Hotel } from "lucide-react";
+import { Clock, Hotel } from "lucide-react";
 import { TRIP_CATEGORIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { CreateTripStage } from "@/components/create-trip-stage";
@@ -17,6 +16,7 @@ import "leaflet/dist/leaflet.css";
 import LeafletMap from "@/components/leaflet-map";
 import { getPhotosByTripId } from "@/app/actions/placeActions";
 import ShareButton from "@/components/share-button";
+import FavoriteButton from "@/components/favorite-button";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -77,10 +77,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
             </div>
             <div className="flex space-x-2 pt-5 md:block">
               <ShareButton currentTrip={currentTrip} shareUrl={shareUrl} />
-              <Button variant="outline" className="flex-1">
-                <Heart />
-                Favori
-              </Button>
+              <FavoriteButton userId={user.id as string} tripId={id} />
               {isOwner && (
                 <TripActions trip={transformedTrip} user={currentUser} />
               )}

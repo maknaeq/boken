@@ -192,3 +192,14 @@ export const photos = pgTable("photos", {
   description: text("description"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+// Table des favoris
+export const favorites = pgTable("favorites", {
+  userId: text("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  tripId: text("trip_id")
+    .references(() => trips.id, { onDelete: "cascade" })
+    .notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});

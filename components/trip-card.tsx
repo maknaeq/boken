@@ -1,3 +1,4 @@
+import { Heart } from "lucide-react";
 import Image from "next/image";
 import { StaticImageData } from "next/image";
 
@@ -5,9 +6,10 @@ interface TripCardProps {
   image: StaticImageData | string | null;
   title: string;
   dates: string;
+  isFavorite: boolean;
 }
 
-export function TripCard({ image, title, dates }: TripCardProps) {
+export function TripCard({ image, title, dates, isFavorite }: TripCardProps) {
   return (
     <div className="cursor-pointer rounded-xl transition-transform ease-out hover:scale-[1.02]">
       <div className="relative aspect-square overflow-hidden rounded-lg">
@@ -27,7 +29,10 @@ export function TripCard({ image, title, dates }: TripCardProps) {
         )}
       </div>
       <div className="py-3">
-        <h3 className="text-lg font-semibold">{title}</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">{title}</h3>
+          {isFavorite && <Heart className="fill-rose-400 text-rose-400" />}
+        </div>
         <p className="text-sm text-gray-500">{dates}</p>
       </div>
     </div>

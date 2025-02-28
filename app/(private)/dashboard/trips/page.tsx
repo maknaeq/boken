@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUserByEmail } from "@/app/actions/userActions";
 import Link from "next/link";
 import { ToastContainer } from "@/components/toast-container";
+import { getFavorites } from "@/app/actions/favoriteActions";
 
 export default async function TripsPage() {
   const session = await auth();
@@ -18,6 +19,11 @@ export default async function TripsPage() {
   }
 
   const user = await getCurrentUserByEmail(session.user.email);
+  const favorites = await getFavorites(user?.[0].id as string);
+
+  function isFavorite(tripId: string) {
+    return !!favorites.some((fav) => fav.tripId === tripId);
+  }
 
   if (!user) {
     redirect("/login");
@@ -41,6 +47,7 @@ export default async function TripsPage() {
                   image={trip.imageCover}
                   title={trip.title}
                   dates={`${format(trip.startDate, "PPP", { locale: fr })} - ${format(trip.endDate, "PPP", { locale: fr })}`}
+                  isFavorite={isFavorite(trip.id)}
                 />
               </Link>
             ),
