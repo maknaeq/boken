@@ -8,6 +8,13 @@ import { PlaceWithPhotos } from "@/lib/type";
 import { useRouter } from "next/navigation";
 import { deletePhoto } from "@/app/actions/photoActions";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
   const [canScroll, setCanScroll] = useState(false);
@@ -16,6 +23,7 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [deletingPhotoId, setDeletingPhotoId] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const router = useRouter();
 
   const checkScroll = useCallback(() => {
@@ -152,13 +160,14 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
                 }}
                 className="relative flex-none overflow-hidden rounded-lg bg-gray-200"
                 style={{ marginRight: "0.5rem" }}
+                onClick={() => setSelectedImage(photo.url)}
               >
                 <Image
                   src={photo.url}
                   alt={photo.url}
                   width={112}
                   height={80}
-                  className="h-full w-full rounded-lg object-cover"
+                  className="h-full w-full cursor-pointer rounded-lg object-cover"
                 />
                 <button
                   onClick={() => handleDeleteImage(photo.id, photo.url)}
@@ -194,6 +203,30 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
           </Button>
         )}
       </div>
+      <Dialog
+        open={!!selectedImage}
+        onOpenChange={() => setSelectedImage(null)}
+      >
+        <DialogContent className="max-h-[95vh] max-w-[95vw] border-none bg-transparent p-0 shadow-none">
+          <DialogHeader>
+            <DialogTitle className="sr-only">Photo</DialogTitle>
+            <DialogDescription className="sr-only">
+              Cliquez en dehors de l&apos;image pour fermer
+            </DialogDescription>
+          </DialogHeader>
+          <div className="relative aspect-video">
+            {selectedImage && (
+              <Image
+                src={selectedImage}
+                alt="Image agrandie"
+                fill
+                className="object-contain"
+                quality={100}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
