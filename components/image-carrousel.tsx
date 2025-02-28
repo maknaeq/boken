@@ -60,7 +60,12 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
     setShowRightGradient(!atEnd);
   }, []);
 
-  const handleDeleteImage = async (photoId: string, photoUrl: string) => {
+  const handleDeleteImage = async (
+    e: React.MouseEvent,
+    photoId: string,
+    photoUrl: string,
+  ) => {
+    e.stopPropagation();
     setDeletingPhotoId(photoId);
     try {
       const result = await deletePhoto(photoId, photoUrl);
@@ -170,7 +175,7 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
                   className="h-full w-full cursor-pointer rounded-lg object-cover"
                 />
                 <button
-                  onClick={() => handleDeleteImage(photo.id, photo.url)}
+                  onClick={(e) => handleDeleteImage(e, photo.id, photo.url)}
                   className="absolute right-0.5 top-0.5 rounded-lg bg-gray-500/50 p-1 text-background"
                   disabled={deletingPhotoId === photo.id}
                 >
