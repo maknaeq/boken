@@ -11,7 +11,11 @@ import Link from "next/link";
 import { ToastContainer } from "@/components/toast-container";
 import { getFavorites } from "@/app/actions/favoriteActions";
 
-export default async function TripsPage() {
+export default async function TripsPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const session = await auth();
 
   if (!session?.user?.email) {
@@ -20,6 +24,7 @@ export default async function TripsPage() {
 
   const user = await getCurrentUserByEmail(session.user.email);
   const favorites = await getFavorites(user?.[0].id as string);
+  const showFavorites = searchParams.favorites === "true";
 
   function isFavorite(tripId: string) {
     return !!favorites.some((fav) => fav.tripId === tripId);
@@ -30,6 +35,11 @@ export default async function TripsPage() {
   }
   const trips = await getAllUserTripsInfos(user[0].id);
 
+  // Filtrer les voyages si nécessaire
+  const filteredTrips = showFavorites
+    ? trips?.filter((trip) => isFavorite(trip.id))
+    : trips;
+
   return (
     <div className="mx-auto max-w-[1280px]">
       <ToastContainer />
@@ -38,7 +48,7 @@ export default async function TripsPage() {
       <div className="flex grid-cols-4 flex-col gap-8 md:grid md:gap-12">
         <CreateTripCard user={user} />
 
-        {trips?.map(
+        {filteredTrips?.map(
           (trip) =>
             trip.startDate &&
             trip.endDate && (
