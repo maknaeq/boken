@@ -77,7 +77,6 @@ async function StageAccordion({
                             <Badge>{place.category}</Badge>
                           </div>
                           <div className="p-1">
-                            ``
                             {isOwner && (
                               <AddingImageButton
                                 userId={user?.[0].id as string}
