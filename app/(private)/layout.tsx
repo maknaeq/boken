@@ -28,6 +28,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="fr">
+      <meta name="apple-mobile-web-app-title" content="Boken" />
       <body className={`${brocolageGrotesque.className}`}>
         <div className="px-4 pb-5 pt-8">
           {/* <div className="absolute z-50 h-52 w-full max-w-[cacl(100vw-30px)] bg-gradient-to-b from-gray-900 to-gray-50/0 px-3 py-5 text-background"> */}

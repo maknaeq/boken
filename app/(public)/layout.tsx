@@ -27,6 +27,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="fr">
+      <meta name="apple-mobile-web-app-title" content="Boken" />
       <body
         className={`${brocolageGrotesque.className} flex min-h-screen flex-col`}
       >
