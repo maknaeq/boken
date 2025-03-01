@@ -38,8 +38,6 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
 
   const isOwner = currentTrip[0].isOwner;
 
-  const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/trips/${id}`;
-
   const locations = tripStages.map((place) => ({
     latitude: parseFloat(place.latitude as string),
     longitude: parseFloat(place.longitude as string),
@@ -76,7 +74,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
               </p>
             </div>
             <div className="flex space-x-2 pt-5 md:block">
-              <ShareButton currentTrip={currentTrip} shareUrl={shareUrl} />
+              <ShareButton currentTrip={currentTrip} />
               <FavoriteButton userId={user.id as string} tripId={id} />
               {isOwner && (
                 <TripActions trip={transformedTrip} user={currentUser} />

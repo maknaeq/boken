@@ -17,27 +17,21 @@ type ShareButtonProps = {
     endDate: Date | null;
     createdAt: Date;
   }[];
-  shareUrl: string;
 };
 
-export default function ShareButton({
-  currentTrip,
-  shareUrl,
-}: ShareButtonProps) {
+export default function ShareButton({ currentTrip }: ShareButtonProps) {
   const handleShare = async () => {
     try {
-      const cleanUrl = new URL(shareUrl);
-      const cleanPath = `/dashboard/trips/${currentTrip[0].id}`;
-      cleanUrl.pathname = cleanPath;
+      const shareUrl = window.location.href;
 
       if (navigator.share) {
         await navigator.share({
           title: currentTrip?.[0].title,
           text: `Découvre mon voyage: ${currentTrip?.[0].title}`,
-          url: cleanUrl.toString(),
+          url: shareUrl,
         });
       } else {
-        await navigator.clipboard.writeText(cleanUrl.toString());
+        await navigator.clipboard.writeText(shareUrl.toString());
         toast({
           title: "Lien copié",
           description: "Le lien a été copié dans le presse-papier",
