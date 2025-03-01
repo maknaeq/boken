@@ -18,7 +18,6 @@ export function ToastContainer() {
         variant: "destructive",
       });
 
-      // Optionnel : déplacez la redirection dans un second useEffect
       const timeout = setTimeout(() => {
         router.replace("/dashboard/trips");
       }, 3000);

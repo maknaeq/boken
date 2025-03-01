@@ -15,7 +15,6 @@ export function CreateTripCard({ user }: { user: User }) {
   useEffect(() => {
     if (searchParams.get("new") === "true") {
       setIsOpen(true);
-      //Clean the search params
       router.replace("/dashboard/trips");
     }
   }, [searchParams, router]);

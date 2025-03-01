@@ -31,14 +31,12 @@ export async function createPhoto(data: {
 
 export async function deletePhoto(photoId: string, photoUrl: string) {
   try {
-    // 1. Extraire le nom du fichier de l'URL
     const filePathMatch = photoUrl.match(/photo\/.+$/);
     if (!filePathMatch) {
       throw new Error("Invalid file path");
     }
     const filePath = filePathMatch[0];
 
-    // 2. Supprimer le fichier du bucket Supabase
     const { error: storageError } = await supabase.storage
       .from("boken_medias")
       .remove([filePath]);
@@ -47,7 +45,6 @@ export async function deletePhoto(photoId: string, photoUrl: string) {
       throw storageError;
     }
 
-    // 3. Supprimer l'enregistrement de la base de données
     await db.delete(photos).where(eq(photos.id, photoId));
 
     return { success: true };

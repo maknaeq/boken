@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -115,7 +115,6 @@ export default function PlaceActions({ place }: PlaceActionsProps) {
   }
 
   async function onSubmit(data: PlaceFormData) {
-    // Si aucune modification n'a été faite, on ferme simplement le dialog
     if (!isDirty) {
       setIsDialogOpen(false);
       return;
@@ -145,8 +144,7 @@ export default function PlaceActions({ place }: PlaceActionsProps) {
     }
   }
 
-  // Reset le formulaire quand le dialog se ferme
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isDialogOpen) {
       form.reset({
         name: place.name,

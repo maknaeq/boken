@@ -147,7 +147,7 @@ function CreateTripForm({
 
       const tripData = {
         ...values,
-        image: imageUrl, // Utilisez l'URL de l'image uploadée ou l'URL Unsplash
+        image: imageUrl,
         startDate: values.dateRange.from,
         endDate: values.dateRange.to,
       };
@@ -187,7 +187,6 @@ function CreateTripForm({
         });
       }
     } catch (error: unknown) {
-      // Afficher le toast d'erreur
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la création du voyage",

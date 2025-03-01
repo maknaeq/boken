@@ -25,7 +25,6 @@ export async function createTrip(
     const startDate = dateRange.from;
     const endDate = dateRange.to;
 
-    // Validation des données - sans vérifier description
     if (!title || !startDate || !endDate) {
       return {
         success: false,
@@ -33,13 +32,12 @@ export async function createTrip(
       };
     }
 
-    // Insertion dans la base de données
     const newTrip = await db
       .insert(trips)
       .values({
         userId,
         title,
-        description: description || "", // Utiliser une chaîne vide si pas de description
+        description: description || "",
         price: parseInt(price),
         category,
         imageCover,
@@ -73,7 +71,6 @@ export async function getAllUserTripsInfos(userId: string) {
 
 export async function getTripById(tripId: string, userId: string) {
   try {
-    // Récupération du voyage sans vérification du propriétaire
     const trip = await db
       .selectDistinct()
       .from(trips)
@@ -174,7 +171,6 @@ export async function createTripStage(
   userId: string,
 ): Promise<CreateTripStageResponse> {
   try {
-    // Validation des données avec Zod
     const validatedData = createTripStageFormSchema.parse(formData);
 
     // Vérification que le voyage appartient bien à l'utilisateur
@@ -228,7 +224,6 @@ export async function createTripStage(
   }
 }
 
-// Action pour récupérer toutes les étapes d'un voyage
 export async function getTripStages(tripId: string) {
   try {
     const stages = await db

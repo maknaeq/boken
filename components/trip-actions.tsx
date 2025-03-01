@@ -71,9 +71,9 @@ interface TripData {
   description: string | null;
   price: number | null;
   category: "Backpacking" | "Luxe" | "Roadtrip" | "Digital Nomad" | "Normal";
-  startDate: string | null; // Change to string since dates are serialized
-  endDate: string | null; // Change to string since dates are serialized
-  createdAt: string; // Change to string since dates are serialized
+  startDate: string | null;
+  endDate: string | null;
+  createdAt: string;
 }
 
 interface TripActionsProps {

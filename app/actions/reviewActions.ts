@@ -36,7 +36,7 @@ export async function updateRatingPlaceById(
 
     return {
       success: true,
-      rating, // Ne retourner que les données nécessaires
+      rating,
     };
   } catch (error) {
     console.error("Erreur lors de la mise à jour de l'avis :", error);

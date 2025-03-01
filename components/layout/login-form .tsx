@@ -131,13 +131,9 @@ function LoginForm() {
                           "https://accounts.google.com/Logout",
                           "_blank",
                         );
-
-                        // Attendre un court instant que la déconnexion soit effectuée
                         setTimeout(() => {
-                          // Fermer la fenêtre de déconnexion
                           googleLogout?.close();
 
-                          // Déclencher la connexion avec sélection de compte
                           signIn("google", {
                             callbackUrl: "/",
                             prompt: "select_account",

@@ -13,7 +13,6 @@ function RedirectButton({
   children,
   href,
 }: RedirectButtonType) {
-  //TODO: refactor to use it better
   const pathname = usePathname();
   if (privateRoutes.some((path) => pathname.includes(path))) {
     return null;

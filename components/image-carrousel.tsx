@@ -41,7 +41,6 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
       setIsAtStart(atStart);
       setIsAtEnd(atEnd);
 
-      // Mise à jour initiale des gradients
       setShowLeftGradient(hasScroll && !atStart);
       setShowRightGradient(hasScroll && !atEnd);
     }
@@ -51,9 +50,8 @@ function ImageCarrousel({ place }: { place: PlaceWithPhotos }) {
     const container = e.target as HTMLDivElement;
     const atStart = container.scrollLeft <= 0;
     const atEnd =
-      container.scrollLeft + container.offsetWidth >= container.scrollWidth - 1; // -1 pour gérer les arrondis
+      container.scrollLeft + container.offsetWidth >= container.scrollWidth - 1;
 
-    // Mise à jour des états
     setIsAtStart(atStart);
     setIsAtEnd(atEnd);
     setShowLeftGradient(!atStart);

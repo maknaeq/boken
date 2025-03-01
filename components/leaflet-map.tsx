@@ -31,8 +31,8 @@ export default function LeafletMap({ locations }: LeafletMapProps) {
   const customIcon = new L.Icon({
     iconUrl: "https://cdn-icons-png.flaticon.com/64/252/252025.png",
     iconSize: [32, 32],
-    iconAnchor: [16, 32], // Point d'ancrage de l'icône
-    popupAnchor: [0, -32], // Point d'ancrage du popup
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
   });
 
   // Conversion des positions pour le Polyline

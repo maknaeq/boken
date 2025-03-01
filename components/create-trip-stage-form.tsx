@@ -198,15 +198,11 @@ function CreateTripStageForm({
         description: "L'étape a été créée avec succès",
       });
 
-      // Fermer le modal/form si nécessaire
       if (setIsOpen) {
         setIsOpen(false);
       }
 
-      // Reset du formulaire
       form.reset();
-
-      // Rafraîchir la page ou la liste des étapes
       router.refresh();
     } catch (error) {
       toast({

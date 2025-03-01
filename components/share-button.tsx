@@ -33,7 +33,6 @@ export default function ShareButton({
           url: shareUrl,
         });
       } else {
-        // Fallback: copier le lien dans le presse-papier
         await navigator.clipboard.writeText(shareUrl);
         toast({
           title: "Lien copié",
@@ -41,7 +40,6 @@ export default function ShareButton({
         });
       }
     } catch (error) {
-      // Si l'utilisateur annule le partage ou une autre erreur survient
       if (error instanceof Error && error.name !== "AbortError") {
         // Ne pas afficher de toast si l'utilisateur a simplement annulé
         toast({

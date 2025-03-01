@@ -18,6 +18,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     error: "/auth/error",
   },
+  trustHost: true,
   providers: [
     Google,
     Github,
@@ -44,7 +45,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const foundUser = user[0];
 
-        // Vérifier le mot de passe avec bcrypt
         const passwordMatch = await bcrypt.compare(
           validatedCredentials.password,
           foundUser.password as string,

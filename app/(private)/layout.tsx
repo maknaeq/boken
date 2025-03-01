@@ -6,6 +6,8 @@ import UserLoginCard from "@/components/user-login-card";
 import { Separator } from "@/components/ui/separator";
 import DashboardNavItems from "@/components/dashboard-navitems";
 import { Toaster } from "@/components/ui/toaster";
+import { NetworkStatus } from "@/components/network-status";
+import { Toaster as Sonner } from "sonner";
 
 const brocolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -30,6 +32,7 @@ export default async function RootLayout({
     <html lang="fr">
       <meta name="apple-mobile-web-app-title" content="Boken" />
       <body className={`${brocolageGrotesque.className}`}>
+        <NetworkStatus />
         <div className="px-4 pb-5 pt-8">
           {/* <div className="absolute z-50 h-52 w-full max-w-[cacl(100vw-30px)] bg-gradient-to-b from-gray-900 to-gray-50/0 px-3 py-5 text-background"> */}
           <div className="mx-auto flex w-full max-w-[1280px] items-start justify-between">
@@ -50,6 +53,7 @@ export default async function RootLayout({
         <DashboardNavItems />
         <main className="px-4">{children}</main>
         <Toaster />
+        <Sonner position="top-center" />
       </body>
     </html>
   );
