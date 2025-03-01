@@ -27,7 +27,6 @@ import Splash2 from "@/public/images/register-splash_2.jpg";
 
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -54,11 +53,9 @@ function LoginForm() {
         redirect: false,
       });
       if (result?.error) {
-        console.error("Erreur d'authentification:", result.error);
-        toast({
-          title: "Erreur d'authentification",
-          description:
-            "Une erreur s'est produite lors de la connexion. Veuillez réessayer.",
+        form.setError("password", {
+          type: "manual",
+          message: "Email ou mot de passe incorrect",
         });
       } else {
         router.refresh();
