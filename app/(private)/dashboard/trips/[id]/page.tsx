@@ -196,6 +196,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                         stage={stage}
                         index={index}
                         user={currentUser}
+                        isOwner={isOwner}
                       />
                     ))}
                   </div>

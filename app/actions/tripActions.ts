@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/db/drizzle";
-import { trips, tripStages } from "@/db/schema";
+import { favorites, trips, tripStages } from "@/db/schema";
 import {
   createTripFormSchema,
   createTripStageFormSchema,
@@ -277,5 +277,25 @@ export async function updateStageById(
       success: false,
       error: "Erreur lors de la mise à jour de l'étape",
     };
+  }
+}
+
+export async function getFavoriteUserTrips(userId: string) {
+  try {
+    const userFavorites = await db
+      .select({
+        trip: trips,
+        favorite: favorites,
+      })
+      .from(favorites)
+      .where(eq(favorites.userId, userId))
+      .leftJoin(trips, eq(favorites.tripId, trips.id));
+
+    return userFavorites.map(({ trip }) => ({
+      ...trip,
+    }));
+  } catch (error) {
+    console.error("Error getting favorite trips:", error);
+    throw error;
   }
 }

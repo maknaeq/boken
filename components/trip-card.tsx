@@ -1,10 +1,9 @@
 import { Heart } from "lucide-react";
 import Image from "next/image";
-import { StaticImageData } from "next/image";
 
 interface TripCardProps {
-  image: StaticImageData | string | null;
-  title: string;
+  image?: string | null;
+  title: string | undefined;
   dates: string;
   isFavorite: boolean;
 }

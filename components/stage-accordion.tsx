@@ -33,10 +33,12 @@ async function StageAccordion({
   stage,
   index,
   user,
+  isOwner,
 }: {
   stage: Stage;
   index: number;
   user: User;
+  isOwner: boolean;
 }) {
   const places = await getPlacesByStageId(stage.id);
   return (
@@ -55,7 +57,7 @@ async function StageAccordion({
             <div className="space-y-10 py-6">
               <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center md:gap-0">
                 <h4 className="text-lg font-semibold">Activités</h4>
-                <CreatePlace user={user} stageId={stage.id} />
+                {isOwner && <CreatePlace user={user} stageId={stage.id} />}
               </div>
               {places.length === 0 ? (
                 <p className="text-gray-500">Aucune activité pour le moment</p>
@@ -75,12 +77,15 @@ async function StageAccordion({
                             <Badge>{place.category}</Badge>
                           </div>
                           <div className="p-1">
-                            <AddingImageButton
-                              userId={user?.[0].id as string}
-                              tripId={stage.tripId as string}
-                              stageId={stage.id}
-                              placeId={place.id}
-                            />
+                            ``
+                            {isOwner && (
+                              <AddingImageButton
+                                userId={user?.[0].id as string}
+                                tripId={stage.tripId as string}
+                                stageId={stage.id}
+                                placeId={place.id}
+                              />
+                            )}
                             <Link
                               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.location)}`}
                               target="_blank"
@@ -90,7 +95,7 @@ async function StageAccordion({
                                 <MapPin />
                               </Button>
                             </Link>
-                            <PlaceActions place={place} />
+                            {isOwner && <PlaceActions place={place} />}
                           </div>
                         </div>
                         <div className="space-y-2">
@@ -116,7 +121,7 @@ async function StageAccordion({
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      <StageActions stage={stage} />
+      {isOwner && <StageActions stage={stage} />}
     </div>
   );
 }

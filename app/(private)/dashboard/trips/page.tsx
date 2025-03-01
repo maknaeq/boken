@@ -1,4 +1,7 @@
-import { getAllUserTripsInfos } from "@/app/actions/tripActions";
+import {
+  getAllUserTripsInfos,
+  getFavoriteUserTrips,
+} from "@/app/actions/tripActions";
 import { FiltersSection } from "@/components/filters-section";
 import { CreateTripCard } from "@/components/create-trip-card";
 import { TripCard } from "@/components/trip-card";
@@ -36,12 +39,12 @@ export default async function TripsPage({
   if (!user) {
     redirect("/login");
   }
-  const trips = await getAllUserTripsInfos(user[0].id);
 
-  // Filtrer les voyages si nécessaire
-  const filteredTrips = showFavorites
-    ? trips?.filter((trip) => isFavorite(trip.id))
-    : trips;
+  const trips = showFavorites
+    ? await getFavoriteUserTrips(user[0].id)
+    : await getAllUserTripsInfos(user[0].id);
+
+  console.log("tripsSSS", trips);
 
   return (
     <div className="mx-auto max-w-[1280px]">
@@ -51,7 +54,7 @@ export default async function TripsPage({
       <div className="flex grid-cols-4 flex-col gap-8 md:grid md:gap-12">
         <CreateTripCard user={user} />
 
-        {filteredTrips?.map(
+        {trips?.map(
           (trip) =>
             trip.startDate &&
             trip.endDate && (
@@ -60,7 +63,7 @@ export default async function TripsPage({
                   image={trip.imageCover}
                   title={trip.title}
                   dates={`${format(trip.startDate, "PPP", { locale: fr })} - ${format(trip.endDate, "PPP", { locale: fr })}`}
-                  isFavorite={isFavorite(trip.id)}
+                  isFavorite={isFavorite(trip.id as string)}
                 />
               </Link>
             ),
