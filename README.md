@@ -30,8 +30,8 @@ Visitez l'application en ligne : [boken-omega.vercel.app](https://boken-omega.ve
 
    ```bash
    git clone https://github.com/maknaeq/boken.git
-   or
-    git clone git@github.com:maknaeq/boken.git
+   ou
+   git clone git@github.com:maknaeq/boken.git
 
    cd boken
    ```
