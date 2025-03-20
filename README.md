@@ -2,8 +2,6 @@
 
 Bōken (ぼうけん) est une application Next.js conçue pour aider les voyageurs solitaires à planifier, organiser et documenter leurs aventures sans stress.
 
-![Bōken](https://boken-omega.vercel.app)
-
 ## ✨ Fonctionnalités
 
 - **Planification de Voyages Personnalisés** : Créez des itinéraires de voyage personnalisés selon vos préférences, budget et durée
